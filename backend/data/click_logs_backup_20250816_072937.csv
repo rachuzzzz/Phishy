@@ -1,0 +1,12 @@
+timestamp,user_email,action_id,ip_address,user_agent,referer
+2025-08-01T18:13:27.714731,test@company.com,test-123,127.0.0.1,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",http://127.0.0.1:3000/docs
+2025-08-05T06:03:19.480736,john.doe@company.com,test-click-123,127.0.0.1,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",http://localhost:8080/docs
+2025-08-12T06:41:47.744135,john.doe@company.com,phish-fdc2485e.,127.0.0.1,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",direct
+2025-08-12T07:15:20.754888,john.doe@company.com,phish-999e82b2,127.0.0.1,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",direct
+2025-08-13T09:48:59.257831,namitha@company.co,phish-c721881c,127.0.0.1,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",direct
+2025-08-15T10:44:07.323726,thomasraisen122@gmail.com,phish-a6f5d6a5,127.0.0.1,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",direct
+2025-08-15T10:47:37.077756,lenovodellg52022@gmail.com,phish-6f0b73da,127.0.0.1,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",direct
+2025-08-15T14:34:10.743446,thomasraisen122@gmail.com,phish-bf880b72,127.0.0.1,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",direct
+2025-08-16T06:51:01.737115,thomasraisen122@gmail.com,phish-bf880b72,127.0.0.1,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",direct
+2025-08-16T07:26:46.417001,thomasraisen123@gmail.com,phish-a5e33fdc,141.95.33.225,"Mozilla/5.0 (iPhone; CPU iPhone OS 18_5_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) GSA/380.0.788317806 Mobile/15E148 Safari/604.1",direct
+2025-08-16T07:26:47.809998,thomasraisen123@gmail.com,phish-a5e33fdc,141.95.33.225,"Mozilla/5.0 (iPhone; CPU iPhone OS 18_5_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) GSA/380.0.788317806 Mobile/15E148 Safari/604.1",direct

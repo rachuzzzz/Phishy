@@ -1,0 +1,6 @@
+2025-08-16 13:04:54,089 - INFO - 2025-08-16T07:34:54.088421 - thomasraisen122@gmail.com - phish-ec55fc3f - 103.160.233.171 - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Sa
+2025-08-17 10:58:00,838 - INFO - 2025-08-17T05:28:00.838882 - u2204052@rajagiri.edu.in - phish-6f5cd36a - 103.165.167.207 - Mozilla/5.0 (iPhone; CPU iPhone OS 18_5_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) GS
+2025-08-17 10:58:01,742 - INFO - 2025-08-17T05:28:01.742693 - u2204052@rajagiri.edu.in - phish-6f5cd36a - 103.165.167.207 - Mozilla/5.0 (iPhone; CPU iPhone OS 18_5_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) GS
+2025-08-18 21:55:07,645 - INFO - 2025-08-18T16:25:07.644611 - thomasraisen123@gmail.com - phish-36119e13enhance - 127.0.0.1 - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Sa
+2025-08-19 09:58:36,090 - INFO - 2025-08-19T04:28:36.090016 - u2204046@rajagiri.edu.in - phish-96b0f4b2 - 1.7.226.194 - Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Mobile Sa
+2025-08-20 15:00:03,240 - INFO - 2025-08-20T09:30:03.240638 - u2204033@rajagiri.edu.in - phish-a6749781 - 1.7.226.194 - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Sa

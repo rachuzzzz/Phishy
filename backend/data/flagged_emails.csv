@@ -1,0 +1,7 @@
+timestamp,email_id,sender_email,subject,flag_category,confidence_level,user_email,plugin_type,plugin_version,threat_level,ai_confidence,additional_context,status
+2025-08-16T12:51:45.197131+00:00,test123,suspicious@example.com,Urgent: Verify your account immediately,phishing,0.8,test@company.com,gmail,1.0.0,critical,0.8999999999999999,Test email flagging,pending
+2025-08-16T12:57:27.215859+00:00,test_ui_123,phisher@malicious.com,URGENT: Your account will be suspended,phishing,0.9,testuser@company.com,gmail,1.0.0,critical,0.8999999999999999,Very suspicious - urgent tone and external link,pending
+2025-08-16T13:44:33.539473+00:00,gmail_1755351814067_yvttb0dpo,start2@glinksgroup.com,"Raisen , Ref No: 2167375 – Take advantage of the free counselling",phishing,0.7,thomasraisen122@gmail.com,gmail,1.0.0,medium,0.5,sus,pending
+2025-08-16T13:49:50.466486+00:00,gmail_1755352183475_rc394arce,start2@glinksgroup.com,"Raisen , Ref No: 2167375 - College life can be much more than just classroom",phishing,0.7,thomasraisen122@gmail.com,gmail,1.0.0,medium,0.5,sus,pending
+2025-08-17T05:31:35.190838+00:00,gmail_1755408684792_dmgxvm6rh,help@acct.epicgames.com,Your two-factor sign in code,phishing,0.5,thomasraisen122@gmail.com,gmail,1.0.0,high,0.7,sus,pending
+2025-08-19T04:33:57.314199+00:00,gmail_1755578019740_8r8ijycsb,noreply@dare2compete.news,Win Myntra Vouchers of INR 2.5 lakhs - Trend. Set. Go- Apply now!,phishing,0.5,thomasraisen123@gmail.com,gmail,1.0.0,medium,0.5,sus,pending

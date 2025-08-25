@@ -1,0 +1,219 @@
+#!/bin/bash
+
+# Phishy Platform Startup Script
+# This script handles the complete startup process for the platform
+
+set -e  # Exit on any error
+
+# Color codes for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Logging function
+log() {
+    echo -e "${GREEN}[$(date +'%Y-%m-%d %H:%M:%S')]${NC} $1"
+}
+
+warn() {
+    echo -e "${YELLOW}[WARNING]${NC} $1"
+}
+
+error() {
+    echo -e "${RED}[ERROR]${NC} $1"
+}
+
+# Check if Python is available
+check_python() {
+    log "Checking Python installation..."
+    if ! command -v python3 &> /dev/null; then
+        error "Python 3 is not installed or not in PATH"
+        exit 1
+    fi
+    
+    PYTHON_VERSION=$(python3 --version | cut -d' ' -f2)
+    log "Python version: $PYTHON_VERSION"
+}
+
+# Check if pip is available
+check_pip() {
+    log "Checking pip installation..."
+    if ! command -v pip &> /dev/null && ! command -v pip3 &> /dev/null; then
+        error "pip is not installed"
+        exit 1
+    fi
+}
+
+# Install dependencies
+install_dependencies() {
+    log "Installing Python dependencies..."
+    
+    # Use pip3 if available, otherwise pip
+    PIP_CMD="pip3"
+    if ! command -v pip3 &> /dev/null; then
+        PIP_CMD="pip"
+    fi
+    
+    if [ -f "requirements.txt" ]; then
+        $PIP_CMD install -r requirements.txt
+        log "Dependencies installed successfully"
+    else
+        warn "requirements.txt not found, installing core dependencies..."
+        $PIP_CMD install fastapi uvicorn pandas httpx python-multipart
+    fi
+}
+
+# Setup data directory
+setup_data_directory() {
+    log "Setting up data directory..."
+    
+    mkdir -p data
+    mkdir -p training
+    mkdir -p logs
+    
+    # Create empty log file if it doesn't exist
+    if [ ! -f "data/click_logs.csv" ]; then
+        echo "timestamp,user_email,action_id,ip_address" > data/click_logs.csv
+        log "Created click_logs.csv"
+    fi
+    
+    # Create basic training page if it doesn't exist
+    if [ ! -f "training/phishing-awareness.html" ]; then
+        cat > training/phishing-awareness.html << 'EOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing Training - You've Been Caught!</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .alert { background: #f8d7da; border: 1px solid #f5c6cb; padding: 20px; border-radius: 5px; }
+        .success { background: #d4edda; border: 1px solid #c3e6cb; padding: 20px; border-radius: 5px; margin-top: 20px; }
+        .btn { background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🎣 You've Been Caught!</h1>
+    
+    <div class="alert">
+        <h2>This was a phishing simulation</h2>
+        <p>You clicked on a simulated phishing email. While this was just a test, it could have been a real attack that compromised your account or your organization's security.</p>
+    </div>
+    
+    <div class="success">
+        <h3>What you should do next:</h3>
+        <ul>
+            <li>Be more cautious with unexpected emails</li>
+            <li>Verify sender identity before clicking links</li>
+            <li>Report suspicious emails to IT security</li>
+            <li>Keep your security training up to date</li>
+        </ul>
+    </div>
+    
+    <p><a href="/" class="btn">Return to Platform</a></p>
+    
+    <p><small>This simulation helps improve your organization's security awareness. Your click has been logged for training analytics.</small></p>
+</body>
+</html>
+EOF
+        log "Created basic training page"
+    fi
+}
+
+# Check Ollama service
+check_ollama() {
+    log "Checking Ollama service..."
+    
+    if ! command -v ollama &> /dev/null; then
+        warn "Ollama not found in PATH"
+        warn "Install from: https://ollama.ai/download"
+        warn "AI features will use fallback mode"
+        return
+    fi
+    
+    # Check if Ollama service is running
+    if curl -s http://localhost:11434/api/tags > /dev/null 2>&1; then
+        log "Ollama service is running"
+        
+        # Check if mistral model is available
+        if curl -s http://localhost:11434/api/tags | grep -q "mistral"; then
+            log "Mistral model is available"
+        else
+            warn "Mistral model not found"
+            log "Pulling Mistral 7B model..."
+            ollama pull mistral:7b
+        fi
+    else
+        warn "Ollama service not running"
+        log "Starting Ollama service..."
+        ollama serve &
+        sleep 5
+        
+        if curl -s http://localhost:11434/api/tags > /dev/null 2>&1; then
+            log "Ollama service started successfully"
+            ollama pull mistral:7b
+        else
+            warn "Failed to start Ollama service"
+            warn "AI features will use fallback mode"
+        fi
+    fi
+}
+
+# Run startup diagnostics
+run_diagnostics() {
+    log "Running startup diagnostics..."
+    
+    if [ -f "startup.py" ]; then
+        python3 startup.py
+    else
+        warn "startup.py not found, skipping detailed diagnostics"
+    fi
+}
+
+# Start the application
+start_application() {
+    log "Starting Phishy Platform..."
+    
+    # Set environment variables
+    export PYTHONPATH="${PYTHONPATH}:$(pwd)"
+    
+    # Check if app.py exists
+    if [ ! -f "app.py" ]; then
+        error "app.py not found in current directory"
+        exit 1
+    fi
+    
+    # Start with uvicorn
+    log "Server will be available at: http://localhost:8000"
+    log "API documentation: http://localhost:8000/docs"
+    log "Press Ctrl+C to stop the server"
+    
+    uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+}
+
+# Main execution
+main() {
+    log "🚀 Starting Phishy Platform Setup"
+    log "=================================="
+    
+    check_python
+    check_pip
+    install_dependencies
+    setup_data_directory
+    check_ollama
+    run_diagnostics
+    
+    log "✅ Setup completed successfully!"
+    log "=================================="
+    
+    start_application
+}
+
+# Handle interruption
+trap 'echo -e "\n${YELLOW}Shutting down Phishy Platform...${NC}"; exit 0' INT
+
+# Run main function
+main "$@"

@@ -1,0 +1,2 @@
+timestamp,user_email,action_id,ip_address,user_agent,campaign_id
+2025-08-16T07:15:32.874342,debug@test.com,debug-123,103.160.233.171,curl/8.12.1,

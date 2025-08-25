@@ -1,0 +1,323 @@
+2025-08-16 11:51:54,455 - __main__ - INFO - Loading route modules...
+2025-08-16 11:51:55,434 - __main__ - INFO - Module click_tracker loaded successfully
+2025-08-16 11:51:55,446 - __main__ - INFO - Module phishing loaded successfully
+2025-08-16 11:51:55,839 - __main__ - INFO - Module llm_generator loaded successfully
+2025-08-16 11:51:56,179 - __main__ - INFO - Module analytics loaded successfully
+2025-08-16 11:51:58,422 - __main__ - INFO - Module admin_assistant loaded successfully
+2025-08-16 11:51:58,508 - routes.historical_query - WARNING - LlamaIndex not available, using fallback mode
+2025-08-16 11:51:58,512 - __main__ - INFO - Module historical_query loaded successfully
+2025-08-16 11:51:59,562 - __main__ - INFO - Module forecast loaded successfully
+2025-08-16 11:51:59,665 - __main__ - INFO - Module smtp_sender loaded successfully
+2025-08-16 11:51:59,677 - __main__ - INFO - Module phishing_detector loaded successfully
+2025-08-16 11:51:59,691 - __main__ - INFO - Module email_tracking loaded successfully
+2025-08-16 11:51:59,692 - __main__ - INFO - Ensured directory exists: data
+2025-08-16 11:51:59,692 - __main__ - INFO - Ensured directory exists: training
+2025-08-16 11:51:59,692 - __main__ - INFO - Ensured directory exists: logs
+2025-08-16 11:51:59,693 - __main__ - INFO - Training directory empty, creating default content...
+2025-08-16 11:51:59,693 - __main__ - WARNING - Failed to mount /training: 'charmap' codec can't encode character '\U0001f3a3' in position 1120: character maps to <undefined>
+2025-08-16 11:52:00,753 - watchfiles.main - INFO - 1 change detected
+2025-08-16 11:52:00,779 - __mp_main__ - INFO - Loading route modules...
+2025-08-16 11:52:01,424 - __mp_main__ - INFO - Module click_tracker loaded successfully
+2025-08-16 11:52:01,433 - __mp_main__ - INFO - Module phishing loaded successfully
+2025-08-16 11:52:01,676 - __mp_main__ - INFO - Module llm_generator loaded successfully
+2025-08-16 11:52:01,865 - __mp_main__ - INFO - Module analytics loaded successfully
+2025-08-16 11:52:03,751 - __mp_main__ - INFO - Module admin_assistant loaded successfully
+2025-08-16 11:52:03,816 - routes.historical_query - WARNING - LlamaIndex not available, using fallback mode
+2025-08-16 11:52:03,823 - __mp_main__ - INFO - Module historical_query loaded successfully
+2025-08-16 11:52:04,667 - __mp_main__ - INFO - Module forecast loaded successfully
+2025-08-16 11:52:04,768 - __mp_main__ - INFO - Module smtp_sender loaded successfully
+2025-08-16 11:52:04,777 - __mp_main__ - INFO - Module phishing_detector loaded successfully
+2025-08-16 11:52:04,796 - __mp_main__ - INFO - Module email_tracking loaded successfully
+2025-08-16 11:52:04,796 - __mp_main__ - INFO - Ensured directory exists: data
+2025-08-16 11:52:04,797 - __mp_main__ - INFO - Ensured directory exists: training
+2025-08-16 11:52:04,797 - __mp_main__ - INFO - Ensured directory exists: logs
+2025-08-16 11:52:04,798 - __mp_main__ - INFO - Training materials mounted at /training
+2025-08-16 11:52:04,942 - watchfiles.main - INFO - 1 change detected
+2025-08-16 11:52:04,954 - app - INFO - Loading route modules...
+2025-08-16 11:52:04,962 - app - INFO - Module click_tracker loaded successfully
+2025-08-16 11:52:04,965 - app - INFO - Module phishing loaded successfully
+2025-08-16 11:52:04,972 - app - INFO - Module llm_generator loaded successfully
+2025-08-16 11:52:04,981 - app - INFO - Module analytics loaded successfully
+2025-08-16 11:52:04,983 - app - INFO - Module admin_assistant loaded successfully
+2025-08-16 11:52:04,984 - app - INFO - Module historical_query loaded successfully
+2025-08-16 11:52:04,988 - app - INFO - Module forecast loaded successfully
+2025-08-16 11:52:04,992 - app - INFO - Module smtp_sender loaded successfully
+2025-08-16 11:52:04,994 - app - INFO - Module phishing_detector loaded successfully
+2025-08-16 11:52:04,998 - app - INFO - Module email_tracking loaded successfully
+2025-08-16 11:52:04,999 - app - INFO - Ensured directory exists: data
+2025-08-16 11:52:04,999 - app - INFO - Ensured directory exists: training
+2025-08-16 11:52:05,001 - app - INFO - Ensured directory exists: logs
+2025-08-16 11:52:05,001 - app - INFO - Training materials mounted at /training
+2025-08-16 11:52:05,294 - watchfiles.main - INFO - 1 change detected
+2025-08-16 11:52:35,034 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-08-16 11:52:35,035 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-08-16 11:53:27,147 - routes.phishing_detector - INFO - Enhanced phishing detection models loaded successfully
+2025-08-16 11:53:27,147 - app - INFO - Phishy Platform starting up...
+2025-08-16 11:53:27,147 - app - INFO - Backend server starting on: http://0.0.0.0:8080
+2025-08-16 11:53:27,147 - app - INFO - Frontend should run on: http://localhost:3001
+2025-08-16 11:53:27,147 - app - INFO - API Documentation: http://localhost:8080/docs
+2025-08-16 11:53:27,148 - app - INFO - Training Page: http://localhost:8080/training/phishing-awareness.html
+2025-08-16 11:53:27,148 - app - INFO - Note: Ports configured to avoid Splunk conflicts (avoiding port 8000)
+2025-08-16 11:53:27,148 - app - INFO - Loaded modules: click_tracker, phishing, llm_generator, analytics, admin_assistant, historical_query, forecast, smtp_sender, phishing_detector, email_tracking
+2025-08-16 11:58:12,440 - watchfiles.main - INFO - 5 changes detected
+2025-08-16 11:58:51,268 - watchfiles.main - INFO - 5 changes detected
+2025-08-16 12:00:04,175 - watchfiles.main - INFO - 5 changes detected
+2025-08-16 12:01:07,203 - watchfiles.main - INFO - 5 changes detected
+2025-08-16 12:01:33,143 - watchfiles.main - INFO - 5 changes detected
+2025-08-16 12:01:56,413 - watchfiles.main - INFO - 5 changes detected
+2025-08-16 12:08:57,174 - watchfiles.main - INFO - 1 change detected
+2025-08-16 12:08:57,543 - watchfiles.main - INFO - 1 change detected
+2025-08-16 12:09:34,976 - watchfiles.main - INFO - 2 changes detected
+2025-08-16 12:11:46,956 - watchfiles.main - INFO - 2 changes detected
+2025-08-16 12:13:17,870 - watchfiles.main - INFO - 5 changes detected
+2025-08-16 12:14:49,301 - watchfiles.main - INFO - 5 changes detected
+2025-08-16 12:15:10,229 - watchfiles.main - INFO - 5 changes detected
+2025-08-16 12:15:50,185 - watchfiles.main - INFO - 5 changes detected
+2025-08-16 12:16:19,094 - watchfiles.main - INFO - 5 changes detected
+2025-08-16 12:21:01,839 - watchfiles.main - INFO - 1 change detected
+2025-08-16 12:24:13,836 - watchfiles.main - INFO - 1 change detected
+2025-08-16 12:26:14,123 - watchfiles.main - INFO - 3 changes detected
+2025-08-16 12:26:15,084 - watchfiles.main - INFO - 3 changes detected
+2025-08-16 12:26:24,776 - watchfiles.main - INFO - 5 changes detected
+2025-08-16 12:36:23,883 - __main__ - INFO - Loading route modules...
+2025-08-16 12:36:24,854 - __main__ - INFO - Module click_tracker loaded successfully
+2025-08-16 12:36:24,865 - __main__ - INFO - Module phishing loaded successfully
+2025-08-16 12:36:25,236 - __main__ - INFO - Module llm_generator loaded successfully
+2025-08-16 12:36:25,585 - __main__ - INFO - Module analytics loaded successfully
+2025-08-16 12:36:27,633 - __main__ - INFO - Module admin_assistant loaded successfully
+2025-08-16 12:36:27,712 - routes.historical_query - WARNING - LlamaIndex not available, using fallback mode
+2025-08-16 12:36:27,717 - __main__ - INFO - Module historical_query loaded successfully
+2025-08-16 12:36:28,586 - __main__ - INFO - Module forecast loaded successfully
+2025-08-16 12:36:28,691 - __main__ - INFO - Module smtp_sender loaded successfully
+2025-08-16 12:36:28,700 - __main__ - INFO - Module phishing_detector loaded successfully
+2025-08-16 12:36:28,715 - __main__ - INFO - Module email_tracking loaded successfully
+2025-08-16 12:36:28,715 - __main__ - INFO - Ensured directory exists: data
+2025-08-16 12:36:28,716 - __main__ - INFO - Ensured directory exists: training
+2025-08-16 12:36:28,716 - __main__ - INFO - Ensured directory exists: logs
+2025-08-16 12:36:28,716 - __main__ - INFO - Training materials mounted at /training
+2025-08-16 12:36:29,732 - __mp_main__ - INFO - Loading route modules...
+2025-08-16 12:36:30,295 - __mp_main__ - INFO - Module click_tracker loaded successfully
+2025-08-16 12:36:30,305 - __mp_main__ - INFO - Module phishing loaded successfully
+2025-08-16 12:36:30,549 - __mp_main__ - INFO - Module llm_generator loaded successfully
+2025-08-16 12:36:30,736 - __mp_main__ - INFO - Module analytics loaded successfully
+2025-08-16 12:36:32,640 - __mp_main__ - INFO - Module admin_assistant loaded successfully
+2025-08-16 12:36:32,714 - routes.historical_query - WARNING - LlamaIndex not available, using fallback mode
+2025-08-16 12:36:32,719 - __mp_main__ - INFO - Module historical_query loaded successfully
+2025-08-16 12:36:33,462 - __mp_main__ - INFO - Module forecast loaded successfully
+2025-08-16 12:36:33,562 - __mp_main__ - INFO - Module smtp_sender loaded successfully
+2025-08-16 12:36:33,572 - __mp_main__ - INFO - Module phishing_detector loaded successfully
+2025-08-16 12:36:33,587 - __mp_main__ - INFO - Module email_tracking loaded successfully
+2025-08-16 12:36:33,587 - __mp_main__ - INFO - Ensured directory exists: data
+2025-08-16 12:36:33,588 - __mp_main__ - INFO - Ensured directory exists: training
+2025-08-16 12:36:33,588 - __mp_main__ - INFO - Ensured directory exists: logs
+2025-08-16 12:36:33,589 - __mp_main__ - INFO - Training materials mounted at /training
+2025-08-16 12:36:33,746 - watchfiles.main - INFO - 1 change detected
+2025-08-16 12:36:33,753 - app - INFO - Loading route modules...
+2025-08-16 12:36:33,760 - app - INFO - Module click_tracker loaded successfully
+2025-08-16 12:36:33,763 - app - INFO - Module phishing loaded successfully
+2025-08-16 12:36:33,770 - app - INFO - Module llm_generator loaded successfully
+2025-08-16 12:36:33,781 - app - INFO - Module analytics loaded successfully
+2025-08-16 12:36:33,782 - app - INFO - Module admin_assistant loaded successfully
+2025-08-16 12:36:33,785 - app - INFO - Module historical_query loaded successfully
+2025-08-16 12:36:33,788 - app - INFO - Module forecast loaded successfully
+2025-08-16 12:36:33,790 - app - INFO - Module smtp_sender loaded successfully
+2025-08-16 12:36:33,794 - app - INFO - Module phishing_detector loaded successfully
+2025-08-16 12:36:33,799 - app - INFO - Module email_tracking loaded successfully
+2025-08-16 12:36:33,800 - app - INFO - Ensured directory exists: data
+2025-08-16 12:36:33,800 - app - INFO - Ensured directory exists: training
+2025-08-16 12:36:33,800 - app - INFO - Ensured directory exists: logs
+2025-08-16 12:36:33,801 - app - INFO - Training materials mounted at /training
+2025-08-16 12:36:34,104 - watchfiles.main - INFO - 1 change detected
+2025-08-16 12:36:53,920 - __main__ - INFO - Loading route modules...
+2025-08-16 12:36:54,609 - __main__ - INFO - Module click_tracker loaded successfully
+2025-08-16 12:36:54,619 - __main__ - INFO - Module phishing loaded successfully
+2025-08-16 12:36:54,917 - __main__ - INFO - Module llm_generator loaded successfully
+2025-08-16 12:36:55,187 - __main__ - INFO - Module analytics loaded successfully
+2025-08-16 12:36:57,094 - __main__ - INFO - Module admin_assistant loaded successfully
+2025-08-16 12:36:57,161 - routes.historical_query - WARNING - LlamaIndex not available, using fallback mode
+2025-08-16 12:36:57,166 - __main__ - INFO - Module historical_query loaded successfully
+2025-08-16 12:36:57,898 - __main__ - INFO - Module forecast loaded successfully
+2025-08-16 12:36:58,017 - __main__ - INFO - Module smtp_sender loaded successfully
+2025-08-16 12:36:58,026 - __main__ - INFO - Module phishing_detector loaded successfully
+2025-08-16 12:36:58,038 - __main__ - INFO - Module email_tracking loaded successfully
+2025-08-16 12:36:58,039 - __main__ - INFO - Ensured directory exists: data
+2025-08-16 12:36:58,039 - __main__ - INFO - Ensured directory exists: training
+2025-08-16 12:36:58,039 - __main__ - INFO - Ensured directory exists: logs
+2025-08-16 12:36:58,039 - __main__ - INFO - Training materials mounted at /training
+2025-08-16 12:36:58,990 - __mp_main__ - INFO - Loading route modules...
+2025-08-16 12:36:59,644 - __mp_main__ - INFO - Module click_tracker loaded successfully
+2025-08-16 12:36:59,659 - __mp_main__ - INFO - Module phishing loaded successfully
+2025-08-16 12:37:00,086 - __mp_main__ - INFO - Module llm_generator loaded successfully
+2025-08-16 12:37:00,488 - __mp_main__ - INFO - Module analytics loaded successfully
+2025-08-16 12:37:02,709 - __mp_main__ - INFO - Module admin_assistant loaded successfully
+2025-08-16 12:37:02,785 - routes.historical_query - WARNING - LlamaIndex not available, using fallback mode
+2025-08-16 12:37:02,791 - __mp_main__ - INFO - Module historical_query loaded successfully
+2025-08-16 12:37:03,589 - __mp_main__ - INFO - Module forecast loaded successfully
+2025-08-16 12:37:03,697 - __mp_main__ - INFO - Module smtp_sender loaded successfully
+2025-08-16 12:37:03,707 - __mp_main__ - INFO - Module phishing_detector loaded successfully
+2025-08-16 12:37:03,724 - __mp_main__ - INFO - Module email_tracking loaded successfully
+2025-08-16 12:37:03,724 - __mp_main__ - INFO - Ensured directory exists: data
+2025-08-16 12:37:03,725 - __mp_main__ - INFO - Ensured directory exists: training
+2025-08-16 12:37:03,725 - __mp_main__ - INFO - Ensured directory exists: logs
+2025-08-16 12:37:03,725 - __mp_main__ - INFO - Training materials mounted at /training
+2025-08-16 12:37:03,833 - app - INFO - Loading route modules...
+2025-08-16 12:37:03,838 - app - INFO - Module click_tracker loaded successfully
+2025-08-16 12:37:03,842 - app - INFO - Module phishing loaded successfully
+2025-08-16 12:37:03,848 - app - INFO - Module llm_generator loaded successfully
+2025-08-16 12:37:03,855 - app - INFO - Module analytics loaded successfully
+2025-08-16 12:37:03,857 - app - INFO - Module admin_assistant loaded successfully
+2025-08-16 12:37:03,859 - app - INFO - Module historical_query loaded successfully
+2025-08-16 12:37:03,861 - app - INFO - Module forecast loaded successfully
+2025-08-16 12:37:03,864 - app - INFO - Module smtp_sender loaded successfully
+2025-08-16 12:37:03,866 - app - INFO - Module phishing_detector loaded successfully
+2025-08-16 12:37:03,868 - watchfiles.main - INFO - 1 change detected
+2025-08-16 12:37:03,870 - app - INFO - Module email_tracking loaded successfully
+2025-08-16 12:37:03,870 - app - INFO - Ensured directory exists: data
+2025-08-16 12:37:03,871 - app - INFO - Ensured directory exists: training
+2025-08-16 12:37:03,871 - app - INFO - Ensured directory exists: logs
+2025-08-16 12:37:03,871 - app - INFO - Training materials mounted at /training
+2025-08-16 12:37:14,959 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-08-16 12:37:14,959 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-08-16 12:37:21,334 - routes.phishing_detector - INFO - Enhanced phishing detection models loaded successfully
+2025-08-16 12:37:21,334 - app - INFO - Phishy Platform starting up...
+2025-08-16 12:37:21,334 - app - INFO - Backend server starting on: http://0.0.0.0:8080
+2025-08-16 12:37:21,334 - app - INFO - Frontend should run on: http://localhost:3001
+2025-08-16 12:37:21,334 - app - INFO - API Documentation: http://localhost:8080/docs
+2025-08-16 12:37:21,334 - app - INFO - Training Page: http://localhost:8080/training/phishing-awareness.html
+2025-08-16 12:37:21,334 - app - INFO - Note: Ports configured to avoid Splunk conflicts (avoiding port 8000)
+2025-08-16 12:37:21,334 - app - INFO - Loaded modules: click_tracker, phishing, llm_generator, analytics, admin_assistant, historical_query, forecast, smtp_sender, phishing_detector, email_tracking
+2025-08-16 12:37:43,349 - watchfiles.main - INFO - 1 change detected
+2025-08-16 12:37:50,718 - watchfiles.main - INFO - 1 change detected
+2025-08-16 12:39:38,016 - watchfiles.main - INFO - 1 change detected
+2025-08-16 12:41:46,587 - watchfiles.main - INFO - 1 change detected
+2025-08-16 12:44:00,537 - watchfiles.main - INFO - 4 changes detected
+2025-08-16 12:44:01,649 - watchfiles.main - INFO - 1 change detected
+2025-08-16 12:45:32,985 - watchfiles.main - INFO - 1 change detected
+2025-08-16 12:56:46,527 - watchfiles.main - INFO - 1 change detected
+2025-08-16 12:56:47,903 - watchfiles.main - INFO - 1 change detected
+2025-08-16 12:59:24,953 - watchfiles.main - INFO - 4 changes detected
+2025-08-16 12:59:25,310 - watchfiles.main - INFO - 1 change detected
+2025-08-16 12:59:37,464 - watchfiles.main - INFO - 4 changes detected
+2025-08-16 12:59:37,828 - watchfiles.main - INFO - 2 changes detected
+2025-08-16 13:04:54,262 - watchfiles.main - INFO - 1 change detected
+2025-08-16 13:05:07,059 - watchfiles.main - INFO - 1 change detected
+2025-08-16 13:06:48,385 - watchfiles.main - INFO - 3 changes detected
+2025-08-16 17:42:59,931 - httpx - INFO - HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+2025-08-16 17:43:12,713 - routes.admin_assistant - INFO - Final response length: 81
+2025-08-16 17:55:26,217 - httpx - INFO - HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 200 OK"
+2025-08-16 17:55:38,437 - routes.admin_assistant - INFO - Final response length: 37
+2025-08-16 18:13:02,785 - __main__ - INFO - Loading route modules...
+2025-08-16 18:13:03,747 - __main__ - INFO - Module click_tracker loaded successfully
+2025-08-16 18:13:03,760 - __main__ - INFO - Module phishing loaded successfully
+2025-08-16 18:13:04,126 - __main__ - INFO - Module llm_generator loaded successfully
+2025-08-16 18:13:04,638 - __main__ - INFO - Module analytics loaded successfully
+2025-08-16 18:13:07,440 - __main__ - INFO - Module admin_assistant loaded successfully
+2025-08-16 18:13:07,536 - routes.historical_query - WARNING - LlamaIndex not available, using fallback mode
+2025-08-16 18:13:07,541 - __main__ - INFO - Module historical_query loaded successfully
+2025-08-16 18:13:08,757 - __main__ - INFO - Module forecast loaded successfully
+2025-08-16 18:13:08,863 - __main__ - INFO - Module smtp_sender loaded successfully
+2025-08-16 18:13:08,877 - __main__ - INFO - Module phishing_detector loaded successfully
+2025-08-16 18:13:08,893 - __main__ - INFO - Module email_tracking loaded successfully
+2025-08-16 18:13:08,991 - __main__ - INFO - Module email_flagging loaded successfully
+2025-08-16 18:13:08,991 - __main__ - INFO - Ensured directory exists: data
+2025-08-16 18:13:08,991 - __main__ - INFO - Ensured directory exists: training
+2025-08-16 18:13:08,992 - __main__ - INFO - Ensured directory exists: logs
+2025-08-16 18:13:08,993 - __main__ - INFO - Training materials mounted at /training
+2025-08-16 18:13:09,929 - __mp_main__ - INFO - Loading route modules...
+2025-08-16 18:13:10,493 - __mp_main__ - INFO - Module click_tracker loaded successfully
+2025-08-16 18:13:10,505 - __mp_main__ - INFO - Module phishing loaded successfully
+2025-08-16 18:13:10,750 - __mp_main__ - INFO - Module llm_generator loaded successfully
+2025-08-16 18:13:10,958 - __mp_main__ - INFO - Module analytics loaded successfully
+2025-08-16 18:13:12,657 - __mp_main__ - INFO - Module admin_assistant loaded successfully
+2025-08-16 18:13:12,720 - routes.historical_query - WARNING - LlamaIndex not available, using fallback mode
+2025-08-16 18:13:12,724 - __mp_main__ - INFO - Module historical_query loaded successfully
+2025-08-16 18:13:13,404 - __mp_main__ - INFO - Module forecast loaded successfully
+2025-08-16 18:13:13,492 - __mp_main__ - INFO - Module smtp_sender loaded successfully
+2025-08-16 18:13:13,501 - __mp_main__ - INFO - Module phishing_detector loaded successfully
+2025-08-16 18:13:13,513 - __mp_main__ - INFO - Module email_tracking loaded successfully
+2025-08-16 18:13:13,555 - __mp_main__ - INFO - Module email_flagging loaded successfully
+2025-08-16 18:13:13,556 - __mp_main__ - INFO - Ensured directory exists: data
+2025-08-16 18:13:13,556 - __mp_main__ - INFO - Ensured directory exists: training
+2025-08-16 18:13:13,556 - __mp_main__ - INFO - Ensured directory exists: logs
+2025-08-16 18:13:13,557 - __mp_main__ - INFO - Training materials mounted at /training
+2025-08-16 18:13:13,672 - watchfiles.main - INFO - 1 change detected
+2025-08-16 18:13:13,703 - app - INFO - Loading route modules...
+2025-08-16 18:13:13,707 - app - INFO - Module click_tracker loaded successfully
+2025-08-16 18:13:13,710 - app - INFO - Module phishing loaded successfully
+2025-08-16 18:13:13,717 - app - INFO - Module llm_generator loaded successfully
+2025-08-16 18:13:13,723 - app - INFO - Module analytics loaded successfully
+2025-08-16 18:13:13,724 - app - INFO - Module admin_assistant loaded successfully
+2025-08-16 18:13:13,726 - app - INFO - Module historical_query loaded successfully
+2025-08-16 18:13:13,728 - app - INFO - Module forecast loaded successfully
+2025-08-16 18:13:13,729 - app - INFO - Module smtp_sender loaded successfully
+2025-08-16 18:13:13,732 - app - INFO - Module phishing_detector loaded successfully
+2025-08-16 18:13:13,735 - app - INFO - Module email_tracking loaded successfully
+2025-08-16 18:13:13,743 - app - INFO - Module email_flagging loaded successfully
+2025-08-16 18:13:13,743 - app - INFO - Ensured directory exists: data
+2025-08-16 18:13:13,744 - app - INFO - Ensured directory exists: training
+2025-08-16 18:13:13,744 - app - INFO - Ensured directory exists: logs
+2025-08-16 18:13:13,744 - app - INFO - Training materials mounted at /training
+2025-08-16 18:13:14,026 - watchfiles.main - INFO - 6 changes detected
+2025-08-16 18:13:32,782 - watchfiles.main - INFO - 1 change detected
+2025-08-16 18:13:40,195 - watchfiles.main - INFO - 2 changes detected
+2025-08-16 18:13:40,553 - watchfiles.main - INFO - 1 change detected
+2025-08-16 18:13:43,285 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-08-16 18:13:43,285 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: all-MiniLM-L6-v2
+2025-08-16 18:13:49,970 - routes.phishing_detector - INFO - Enhanced phishing detection models loaded successfully
+2025-08-16 18:13:49,970 - app - INFO - Phishy Platform starting up...
+2025-08-16 18:13:49,970 - app - INFO - Backend server starting on: http://0.0.0.0:8080
+2025-08-16 18:13:49,970 - app - INFO - Frontend should run on: http://localhost:3001
+2025-08-16 18:13:49,972 - app - INFO - API Documentation: http://localhost:8080/docs
+2025-08-16 18:13:49,972 - app - INFO - Training Page: http://localhost:8080/training/phishing-awareness.html
+2025-08-16 18:13:49,972 - app - INFO - Note: Ports configured to avoid Splunk conflicts (avoiding port 8000)
+2025-08-16 18:13:49,972 - app - INFO - Loaded modules: click_tracker, phishing, llm_generator, analytics, admin_assistant, historical_query, forecast, smtp_sender, phishing_detector, email_tracking, email_flagging
+2025-08-16 18:14:19,382 - watchfiles.main - INFO - 1 change detected
+2025-08-16 18:14:29,120 - watchfiles.main - INFO - 4 changes detected
+2025-08-16 18:14:38,150 - watchfiles.main - INFO - 4 changes detected
+2025-08-16 18:16:03,518 - watchfiles.main - INFO - 4 changes detected
+2025-08-16 18:16:47,439 - watchfiles.main - INFO - 4 changes detected
+2025-08-16 18:17:28,337 - watchfiles.main - INFO - 4 changes detected
+2025-08-16 18:18:13,027 - watchfiles.main - INFO - 4 changes detected
+2025-08-16 18:19:07,086 - watchfiles.main - INFO - 4 changes detected
+2025-08-16 18:20:12,987 - watchfiles.main - INFO - 2 changes detected
+2025-08-16 18:21:21,301 - watchfiles.main - INFO - 4 changes detected
+2025-08-16 18:21:45,261 - watchfiles.main - INFO - 1 change detected
+2025-08-16 18:22:21,772 - watchfiles.main - INFO - 5 changes detected
+2025-08-16 18:22:46,040 - watchfiles.main - INFO - 5 changes detected
+2025-08-16 18:22:52,756 - watchfiles.main - INFO - 5 changes detected
+2025-08-16 18:23:01,082 - watchfiles.main - INFO - 5 changes detected
+2025-08-16 18:23:21,711 - watchfiles.main - INFO - 5 changes detected
+2025-08-16 18:23:59,325 - watchfiles.main - INFO - 5 changes detected
+2025-08-16 18:25:24,031 - watchfiles.main - INFO - 3 changes detected
+2025-08-16 18:27:27,305 - watchfiles.main - INFO - 1 change detected
+2025-08-16 18:28:42,628 - watchfiles.main - INFO - 1 change detected
+2025-08-16 18:28:43,641 - watchfiles.main - INFO - 1 change detected
+2025-08-16 18:29:10,988 - watchfiles.main - INFO - 1 change detected
+2025-08-16 18:29:28,871 - watchfiles.main - INFO - 1 change detected
+2025-08-16 18:29:56,581 - watchfiles.main - INFO - 1 change detected
+2025-08-16 18:30:49,542 - watchfiles.main - INFO - 1 change detected
+2025-08-16 18:34:01,699 - watchfiles.main - INFO - 1 change detected
+2025-08-16 18:39:29,002 - watchfiles.main - INFO - 2 changes detected
+2025-08-16 18:39:29,368 - watchfiles.main - INFO - 4 changes detected
+2025-08-16 18:41:36,185 - watchfiles.main - INFO - 1 change detected
+2025-08-16 18:46:04,385 - watchfiles.main - INFO - 1 change detected
+2025-08-16 18:49:24,211 - watchfiles.main - INFO - 1 change detected
+2025-08-16 18:50:00,455 - watchfiles.main - INFO - 5 changes detected
+2025-08-16 18:50:00,817 - watchfiles.main - INFO - 1 change detected
+2025-08-16 18:50:08,481 - watchfiles.main - INFO - 5 changes detected
+2025-08-16 18:50:41,018 - watchfiles.main - INFO - 5 changes detected
+2025-08-16 18:52:31,508 - watchfiles.main - INFO - 1 change detected
+2025-08-16 18:56:35,877 - watchfiles.main - INFO - 1 change detected
+2025-08-16 18:56:36,238 - watchfiles.main - INFO - 1 change detected
+2025-08-16 18:56:37,002 - watchfiles.main - INFO - 1 change detected
+2025-08-16 18:59:49,588 - watchfiles.main - INFO - 1 change detected
+2025-08-16 19:02:19,568 - watchfiles.main - INFO - 1 change detected
+2025-08-16 19:03:28,784 - watchfiles.main - INFO - 1 change detected
+2025-08-16 19:03:43,659 - watchfiles.main - INFO - 5 changes detected
+2025-08-16 19:05:01,058 - watchfiles.main - INFO - 1 change detected
+2025-08-16 19:06:05,001 - watchfiles.main - INFO - 1 change detected
+2025-08-16 19:09:21,356 - watchfiles.main - INFO - 1 change detected
+2025-08-16 19:10:27,407 - watchfiles.main - INFO - 1 change detected
+2025-08-16 19:11:33,828 - watchfiles.main - INFO - 1 change detected
+2025-08-16 19:11:35,745 - watchfiles.main - INFO - 1 change detected
+2025-08-16 19:13:02,325 - watchfiles.main - INFO - 5 changes detected

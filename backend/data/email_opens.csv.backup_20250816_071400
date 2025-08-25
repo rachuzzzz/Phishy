@@ -1,0 +1,6 @@
+timestamp,user_email,action_id,ip_address,user_agent,campaign_id
+2025-08-16T06:39:34.748199,test@example.com,phish-test123,127.0.0.1,curl/8.12.1,
+2025-08-16T06:54:13.742926,your_actual_email@gmail.com,phish-gmail-test,127.0.0.1,Mozilla/5.0 (compatible; Gmail Image Proxy),
+2025-08-16T07:07:43.252159,debug@test.com,debug-test,127.0.0.1,curl/8.12.1,
+2025-08-16T07:07:50.618945,ngrok@test.com,ngrok-test,103.160.233.171,curl/8.12.1,
+2025-08-16T07:09:37.937935,your@gmail.com,browser-test,103.160.233.171,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",

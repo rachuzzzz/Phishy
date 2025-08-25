@@ -1,0 +1,3 @@
+timestamp,user_email,action_id,ip_address,user_agent,campaign_id
+2025-08-16T07:35:06.996779,thomasraisen122@gmail.com,manual-test,103.160.233.171,curl/8.12.1,
+2025-08-21T04:14:45.104016,test@example.com,email_open,127.0.0.1,curl/8.12.1,test_campaign

@@ -1,0 +1,8 @@
+2025-08-01 00:42:44,047 - WARNING - LlamaIndex not available, using fallback mode
+2025-08-01 00:43:17,417 - WARNING - email-validator not installed, email fields will be treated as str.
+To install, run: pip install email-validator
+2025-08-01 00:44:26,647 - INFO - HTTP Request: POST http://localhost:11434/api/generate "HTTP/1.1 404 Not Found"
+2025-08-01 00:44:26,648 - ERROR - Unexpected error in LLM generation: Client error '404 Not Found' for url 'http://localhost:11434/api/generate'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+2025-08-01 00:44:26,649 - WARNING - LLM generation failed for john.doe@company.com, using fallback
+2025-08-01 18:20:52,072 - WARNING - LlamaIndex not available, using fallback mode
