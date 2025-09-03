@@ -21,7 +21,7 @@ class OllamaClient:
     def __init__(self, base_url: str = "http://localhost:11434"):
         self.base_url = base_url
         self.model = "phi3:mini"
-        self.timeout = 120.0
+        self.timeout = 300.0  # 5 minutes for comprehensive security analysis
         
     async def check_service(self) -> Dict[str, Any]:
         """Check if Ollama service is available and get model info"""
@@ -63,7 +63,7 @@ class OllamaClient:
                         "num_predict": max_tokens,
                         "temperature": temperature,
                         "top_p": 0.9,
-                        "stop": ["```", "---END---", "\n\n\n"]  # Stop tokens to prevent overly long responses
+                        "stop": ["---END---", "\n\n\n\n"]  # Removed ``` to allow JSON in markdown blocks
                     }
                 }
                 
@@ -1099,3 +1099,136 @@ def get_generation_stats():
             "debug_endpoints": True
         }
     }
+
+class SecurityAnalysisRequest(BaseModel):
+    """Request model for AI security analysis explanation"""
+    analysis_results: Dict[str, Any] = Field(..., description="Comprehensive security analysis results")
+    email_content: Optional[str] = Field(None, description="Original email content")
+    user_id: str = Field(..., description="User ID for tracking")
+    prompt: Optional[str] = Field(None, description="Custom prompt for LLM")
+
+@router.post("/explain-security-analysis")
+async def explain_security_analysis(request: SecurityAnalysisRequest):
+    """
+    Generate an explainable AI summary of comprehensive security analysis results.
+    
+    This endpoint combines ML, API, and pattern analysis results to provide
+    clear, actionable explanations for end users. NO FALLBACKS - LLM must be available.
+    """
+    logger.info(f"🤖 Generating security explanation for user {request.user_id}")
+    
+    # Check Ollama service availability - FAIL if unavailable
+    service_status = await ollama_client.check_service()
+    if not service_status["service_available"]:
+        logger.error("Ollama service unavailable - no fallback allowed")
+        raise HTTPException(status_code=503, detail="AI service unavailable. Local LLM is required for security explanations.")
+    
+    # Build comprehensive prompt
+    prompt = request.prompt or build_default_security_prompt(request.analysis_results)
+    
+    # Generate explanation using LLM - FAIL if unsuccessful
+    llm_response = await ollama_client.generate_completion(prompt, max_tokens=1000, temperature=0.3)
+    
+    if not llm_response or len(llm_response.strip()) < 10:
+        logger.error("LLM returned empty or invalid response")
+        raise HTTPException(status_code=500, detail="AI model failed to generate explanation")
+    
+    # Parse LLM response (expecting JSON format) - FAIL if invalid
+    try:
+        # Extract JSON from markdown if present
+        json_content = extract_json_from_response(llm_response)
+        explanation = json.loads(json_content)
+        
+        # Validate required fields - FAIL if missing
+        required_fields = ["summary", "overall_risk_level", "key_findings", "recommendations"]
+        if not all(field in explanation for field in required_fields):
+            logger.error("LLM response missing required fields")
+            raise HTTPException(status_code=500, detail="AI model returned incomplete explanation")
+            
+        logger.info(f"✅ Generated security explanation with {len(explanation.get('key_findings', []))} findings")
+        return explanation
+        
+    except json.JSONDecodeError as e:
+        logger.error(f"LLM response not valid JSON: {e} - Original response: {llm_response[:200]}...")
+        raise HTTPException(status_code=500, detail="AI model returned invalid response format")
+    except Exception as e:
+        logger.error(f"Error parsing LLM response: {e} - Original response: {llm_response[:200]}...")
+        raise HTTPException(status_code=500, detail="AI model returned unparseable response")
+
+def extract_json_from_response(response: str) -> str:
+    """Extract JSON content from LLM response that may be wrapped in markdown"""
+    response = response.strip()
+    
+    # Look for JSON in markdown code blocks
+    import re
+    json_pattern = r'```(?:json)?\s*\n?(.*?)\n?```'
+    matches = re.findall(json_pattern, response, re.DOTALL | re.IGNORECASE)
+    
+    if matches:
+        # Use the first JSON block found
+        json_content = matches[0].strip()
+        logger.info(f"Extracted JSON from markdown block: {len(json_content)} characters")
+        return json_content
+    
+    # Look for JSON object directly (starts with { and ends with })
+    json_pattern = r'\{.*\}'
+    matches = re.findall(json_pattern, response, re.DOTALL)
+    
+    if matches:
+        # Use the last complete JSON object found (in case there are incomplete ones)
+        json_content = matches[-1].strip()
+        logger.info(f"Extracted JSON object directly: {len(json_content)} characters")
+        return json_content
+    
+    # If no JSON found, return original response and let JSON parser handle the error
+    logger.warning("No JSON content found in LLM response")
+    return response
+
+def build_default_security_prompt(analysis_results: Dict[str, Any]) -> str:
+    """Build a comprehensive prompt for security analysis explanation"""
+    
+    ml_analysis = analysis_results.get("ml_analysis", {})
+    safe_browsing = analysis_results.get("safe_browsing", {})
+    urlscan_io = analysis_results.get("urlscan_io", {})
+    path_intelligence = analysis_results.get("path_intelligence", {})
+    
+    return f"""You are an expert cybersecurity analyst explaining email security analysis to end users.
+
+ANALYSIS RESULTS TO EXPLAIN:
+
+ML ANALYSIS:
+- Is Phishing: {ml_analysis.get('is_phishing', 'Unknown')}
+- Confidence: {ml_analysis.get('confidence_score', 0)}%
+- Risk Level: {ml_analysis.get('risk_level', 'Unknown')}
+
+GOOGLE SAFE BROWSING:
+- Status: {safe_browsing.get('status', 'Unknown')}
+- URLs Checked: {safe_browsing.get('urls_checked', 0)}
+- Threats Found: {len(safe_browsing.get('threats', []))}
+
+URLSCAN.IO:
+- Status: {urlscan_io.get('status', 'Unknown')}
+- Malicious Score: {urlscan_io.get('malicious_score', 0)}/100
+- URLs Scanned: {urlscan_io.get('urls_scanned', 0)}
+
+PATH INTELLIGENCE:
+- Suspicious Patterns: {path_intelligence.get('hasPathThreats', False)}
+- Pattern Warnings: {len(path_intelligence.get('pathWarnings', []))}
+- URLs Analyzed: {path_intelligence.get('analysisMetrics', {}).get('urlsAnalyzed', 0)}
+
+Provide a clear explanation in this EXACT JSON format:
+{{
+  "summary": "2-3 sentence explanation of what this email is and why it's dangerous/safe",
+  "overall_risk_level": "CRITICAL|HIGH|MEDIUM|LOW",
+  "key_findings": ["Specific finding 1", "Specific finding 2", "Specific finding 3"],
+  "recommendations": ["Action user should take 1", "Action user should take 2", "Action user should take 3"]
+}}
+
+FOCUS ON:
+1. Explaining WHY different tools gave different results (if they disagree)
+2. What attack techniques are being used (cloud storage abuse, URL evasion, etc.)
+3. Clear, actionable advice in simple language
+4. Why this is a sophisticated attack if patterns were detected but APIs say clean
+
+Be direct and clear. Avoid technical jargon."""
+
