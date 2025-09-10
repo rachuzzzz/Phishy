@@ -303,10 +303,11 @@ class EnhancedPhishingDetector:
 # Initialize detector instance
 detector = EnhancedPhishingDetector()
 
-@router.on_event("startup")
-async def startup_detector():
-    """Initialize the phishing detector on startup"""
-    await detector.initialize_models()
+# FIXED: Remove router startup event and use lazy initialization
+# @router.on_event("startup")  # This doesn't work reliably with dynamic imports
+# async def startup_detector():
+#     """Initialize the phishing detector on startup"""
+#     await detector.initialize_models()
 
 @router.post("/analyze-email", response_model=PhishingAnalysisResponse)
 async def analyze_email(request: EmailAnalysisRequest):
@@ -390,6 +391,25 @@ async def batch_analyze_emails(emails: List[EmailAnalysisRequest]):
             })
     
     return {"results": results, "processed_count": len(results)}
+
+@router.post("/initialize")
+async def initialize_detector():
+    """Manually initialize the phishing detector"""
+    try:
+        result = await detector.initialize_models()
+        return {
+            "status": "success",
+            "initialized": result,
+            "model_type": "ml_model" if model_cache["initialized"] == True else "rule_based",
+            "classifier_loaded": model_cache["classifier"] is not None,
+            "embedder_loaded": model_cache["embedder"] is not None
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "error": str(e),
+            "initialized": False
+        }
 
 @router.get("/detector-status")
 async def get_detector_status():

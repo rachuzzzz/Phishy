@@ -321,3 +321,139 @@
 2025-08-16 19:11:33,828 - watchfiles.main - INFO - 1 change detected
 2025-08-16 19:11:35,745 - watchfiles.main - INFO - 1 change detected
 2025-08-16 19:13:02,325 - watchfiles.main - INFO - 5 changes detected
+2025-09-07 20:11:55,822 - backend.app - INFO - Loading route modules...
+2025-09-07 20:11:55,824 - backend.app - WARNING - Failed to load click_tracker: No module named 'routes.click_tracker'
+2025-09-07 20:11:55,824 - backend.app - WARNING - Failed to load phishing: No module named 'routes.phishing'
+2025-09-07 20:11:55,825 - backend.app - WARNING - Failed to load llm_generator: No module named 'routes.llm_generator'
+2025-09-07 20:11:55,825 - backend.app - WARNING - Failed to load analytics: No module named 'routes.analytics'
+2025-09-07 20:11:55,825 - backend.app - WARNING - Failed to load classifier_endpoint: No module named 'routes.classifier_endpoint'
+2025-09-07 20:11:55,826 - backend.app - WARNING - Failed to load simple_intelligent_query: No module named 'routes.simple_intelligent_query'
+2025-09-07 20:11:55,826 - backend.app - WARNING - Failed to load historical_query: No module named 'routes.historical_query'
+2025-09-07 20:11:55,826 - backend.app - WARNING - Failed to load forecast: No module named 'routes.forecast'
+2025-09-07 20:11:55,827 - backend.app - WARNING - Failed to load phishing_detector: No module named 'routes.phishing_detector'
+2025-09-07 20:11:55,827 - backend.app - WARNING - Failed to load comprehensive_analysis: No module named 'routes.comprehensive_analysis'
+2025-09-07 20:11:55,827 - backend.app - WARNING - Failed to load email_tracking: No module named 'routes.email_tracking'
+2025-09-07 20:11:55,828 - backend.app - WARNING - Failed to load email_flagging: No module named 'routes.email_flagging'
+2025-09-07 20:11:55,828 - backend.app - WARNING - Failed to load smtp_sender: No module named 'routes.smtp_sender'
+2025-09-07 20:11:55,828 - backend.app - INFO - Ensured directory exists: data
+2025-09-07 20:11:55,830 - backend.app - INFO - Ensured directory exists: training
+2025-09-07 20:11:55,830 - backend.app - INFO - Ensured directory exists: logs
+2025-09-07 20:11:55,831 - backend.app - INFO - Training materials mounted at /training
+2025-09-07 20:12:42,034 - backend.app - INFO - Loading route modules...
+2025-09-07 20:12:43,005 - backend.app - INFO - Module click_tracker loaded successfully
+2025-09-07 20:12:43,016 - backend.app - INFO - Module phishing loaded successfully
+2025-09-07 20:12:43,413 - backend.app - INFO - Module llm_generator loaded successfully
+2025-09-07 20:12:43,711 - backend.app - INFO - Module analytics loaded successfully
+2025-09-07 20:12:43,715 - backend.app - WARNING - Failed to load classifier_endpoint: No module named 'routes.classifier_endpoint'
+2025-09-07 20:12:43,718 - backend.app - WARNING - Failed to load simple_intelligent_query: No module named 'routes.simple_intelligent_query'
+2025-09-07 20:12:43,806 - backend.routes.historical_query - WARNING - LlamaIndex not available, using fallback mode
+2025-09-07 20:12:43,811 - backend.app - INFO - Module historical_query loaded successfully
+2025-09-07 20:12:44,796 - backend.app - INFO - Module forecast loaded successfully
+2025-09-07 20:12:44,804 - backend.app - INFO - Module phishing_detector loaded successfully
+2025-09-07 20:12:44,974 - backend.app - INFO - Module comprehensive_analysis loaded successfully
+2025-09-07 20:12:45,036 - backend.app - INFO - Module email_tracking loaded successfully
+2025-09-07 20:12:45,116 - backend.app - INFO - Module email_flagging loaded successfully
+2025-09-07 20:12:45,164 - backend.app - INFO - Module smtp_sender loaded successfully
+2025-09-07 20:12:45,164 - backend.app - INFO - Ensured directory exists: data
+2025-09-07 20:12:45,165 - backend.app - INFO - Ensured directory exists: training
+2025-09-07 20:12:45,165 - backend.app - INFO - Ensured directory exists: logs
+2025-09-07 20:12:45,166 - backend.app - INFO - Training materials mounted at /training
+2025-09-07 20:12:57,319 - backend.app - INFO - Loading route modules...
+2025-09-07 20:12:58,004 - backend.app - INFO - Module click_tracker loaded successfully
+2025-09-07 20:12:58,014 - backend.app - INFO - Module phishing loaded successfully
+2025-09-07 20:12:58,304 - backend.app - INFO - Module llm_generator loaded successfully
+2025-09-07 20:12:58,530 - backend.app - INFO - Module analytics loaded successfully
+2025-09-07 20:12:58,533 - backend.app - WARNING - Failed to load classifier_endpoint: No module named 'routes.classifier_endpoint'
+2025-09-07 20:12:58,535 - backend.app - WARNING - Failed to load simple_intelligent_query: No module named 'routes.simple_intelligent_query'
+2025-09-07 20:12:58,616 - backend.routes.historical_query - WARNING - LlamaIndex not available, using fallback mode
+2025-09-07 20:12:58,623 - backend.app - INFO - Module historical_query loaded successfully
+2025-09-07 20:12:59,529 - backend.app - INFO - Module forecast loaded successfully
+2025-09-07 20:12:59,537 - backend.app - INFO - Module phishing_detector loaded successfully
+2025-09-07 20:12:59,674 - backend.app - INFO - Module comprehensive_analysis loaded successfully
+2025-09-07 20:12:59,748 - backend.app - INFO - Module email_tracking loaded successfully
+2025-09-07 20:12:59,802 - backend.app - INFO - Module email_flagging loaded successfully
+2025-09-07 20:12:59,833 - backend.app - INFO - Module smtp_sender loaded successfully
+2025-09-07 20:12:59,833 - backend.app - INFO - Ensured directory exists: data
+2025-09-07 20:12:59,833 - backend.app - INFO - Ensured directory exists: training
+2025-09-07 20:12:59,834 - backend.app - INFO - Ensured directory exists: logs
+2025-09-07 20:12:59,834 - backend.app - INFO - Training materials mounted at /training
+2025-09-10 19:21:21,541 - __main__ - INFO - Loading route modules...
+2025-09-10 19:21:22,274 - __main__ - INFO - Module click_tracker loaded successfully
+2025-09-10 19:21:22,295 - __main__ - INFO - Module phishing loaded successfully
+2025-09-10 19:21:22,649 - __main__ - INFO - Module llm_generator loaded successfully
+2025-09-10 19:21:22,952 - __main__ - INFO - Module analytics loaded successfully
+2025-09-10 19:21:22,956 - __main__ - WARNING - Failed to load classifier_endpoint: No module named 'routes.classifier_endpoint'
+2025-09-10 19:21:22,958 - __main__ - WARNING - Failed to load simple_intelligent_query: No module named 'routes.simple_intelligent_query'
+2025-09-10 19:21:23,062 - backend.routes.historical_query - WARNING - LlamaIndex not available, using fallback mode
+2025-09-10 19:21:23,071 - __main__ - INFO - Module historical_query loaded successfully
+2025-09-10 19:21:24,174 - __main__ - INFO - Module forecast loaded successfully
+2025-09-10 19:21:24,186 - __main__ - INFO - Module phishing_detector loaded successfully
+2025-09-10 19:21:24,352 - __main__ - INFO - Module comprehensive_analysis loaded successfully
+2025-09-10 19:21:24,434 - __main__ - INFO - Module email_tracking loaded successfully
+2025-09-10 19:21:24,493 - __main__ - INFO - Module email_flagging loaded successfully
+2025-09-10 19:21:24,527 - __main__ - INFO - Module smtp_sender loaded successfully
+2025-09-10 19:21:24,527 - __main__ - INFO - Ensured directory exists: data
+2025-09-10 19:21:24,527 - __main__ - INFO - Ensured directory exists: training
+2025-09-10 19:21:24,528 - __main__ - INFO - Ensured directory exists: logs
+2025-09-10 19:21:24,528 - __main__ - INFO - Training materials mounted at /training
+2025-09-10 19:21:25,662 - __mp_main__ - INFO - Loading route modules...
+2025-09-10 19:21:26,352 - __mp_main__ - INFO - Module click_tracker loaded successfully
+2025-09-10 19:21:26,366 - __mp_main__ - INFO - Module phishing loaded successfully
+2025-09-10 19:21:26,732 - __mp_main__ - INFO - Module llm_generator loaded successfully
+2025-09-10 19:21:26,983 - __mp_main__ - INFO - Module analytics loaded successfully
+2025-09-10 19:21:26,987 - __mp_main__ - WARNING - Failed to load classifier_endpoint: No module named 'routes.classifier_endpoint'
+2025-09-10 19:21:26,989 - __mp_main__ - WARNING - Failed to load simple_intelligent_query: No module named 'routes.simple_intelligent_query'
+2025-09-10 19:21:27,079 - backend.routes.historical_query - WARNING - LlamaIndex not available, using fallback mode
+2025-09-10 19:21:27,085 - __mp_main__ - INFO - Module historical_query loaded successfully
+2025-09-10 19:21:27,949 - __mp_main__ - INFO - Module forecast loaded successfully
+2025-09-10 19:21:27,961 - __mp_main__ - INFO - Module phishing_detector loaded successfully
+2025-09-10 19:21:28,117 - __mp_main__ - INFO - Module comprehensive_analysis loaded successfully
+2025-09-10 19:21:28,186 - __mp_main__ - INFO - Module email_tracking loaded successfully
+2025-09-10 19:21:28,243 - __mp_main__ - INFO - Module email_flagging loaded successfully
+2025-09-10 19:21:28,276 - __mp_main__ - INFO - Module smtp_sender loaded successfully
+2025-09-10 19:21:28,276 - __mp_main__ - INFO - Ensured directory exists: data
+2025-09-10 19:21:28,277 - __mp_main__ - INFO - Ensured directory exists: training
+2025-09-10 19:21:28,277 - __mp_main__ - INFO - Ensured directory exists: logs
+2025-09-10 19:21:28,277 - __mp_main__ - INFO - Training materials mounted at /training
+2025-09-10 19:21:28,425 - watchfiles.main - INFO - 1 change detected
+2025-09-10 19:49:16,815 - __main__ - INFO - Loading route modules...
+2025-09-10 19:49:17,483 - __main__ - INFO - Module click_tracker loaded successfully
+2025-09-10 19:49:17,496 - __main__ - INFO - Module phishing loaded successfully
+2025-09-10 19:49:17,889 - __main__ - INFO - Module llm_generator loaded successfully
+2025-09-10 19:49:18,219 - __main__ - INFO - Module analytics loaded successfully
+2025-09-10 19:49:18,224 - __main__ - WARNING - Failed to load classifier_endpoint: No module named 'routes.classifier_endpoint'
+2025-09-10 19:49:18,226 - __main__ - WARNING - Failed to load simple_intelligent_query: No module named 'routes.simple_intelligent_query'
+2025-09-10 19:49:18,320 - backend.routes.historical_query - WARNING - LlamaIndex not available, using fallback mode
+2025-09-10 19:49:18,327 - __main__ - INFO - Module historical_query loaded successfully
+2025-09-10 19:49:19,410 - __main__ - INFO - Module forecast loaded successfully
+2025-09-10 19:49:19,443 - __main__ - INFO - Module phishing_detector loaded successfully
+2025-09-10 19:49:19,640 - __main__ - INFO - Module comprehensive_analysis loaded successfully
+2025-09-10 19:49:19,710 - __main__ - INFO - Module email_tracking loaded successfully
+2025-09-10 19:49:19,784 - __main__ - INFO - Module email_flagging loaded successfully
+2025-09-10 19:49:19,822 - __main__ - INFO - Module smtp_sender loaded successfully
+2025-09-10 19:49:19,822 - __main__ - INFO - Ensured directory exists: data
+2025-09-10 19:49:19,822 - __main__ - INFO - Ensured directory exists: training
+2025-09-10 19:49:19,823 - __main__ - INFO - Ensured directory exists: logs
+2025-09-10 19:49:19,823 - __main__ - INFO - Training materials mounted at /training
+2025-09-10 19:49:21,001 - __mp_main__ - INFO - Loading route modules...
+2025-09-10 19:49:21,628 - __mp_main__ - INFO - Module click_tracker loaded successfully
+2025-09-10 19:49:21,641 - __mp_main__ - INFO - Module phishing loaded successfully
+2025-09-10 19:49:21,963 - __mp_main__ - INFO - Module llm_generator loaded successfully
+2025-09-10 19:49:22,202 - __mp_main__ - INFO - Module analytics loaded successfully
+2025-09-10 19:49:22,206 - __mp_main__ - WARNING - Failed to load classifier_endpoint: No module named 'routes.classifier_endpoint'
+2025-09-10 19:49:22,208 - __mp_main__ - WARNING - Failed to load simple_intelligent_query: No module named 'routes.simple_intelligent_query'
+2025-09-10 19:49:22,295 - backend.routes.historical_query - WARNING - LlamaIndex not available, using fallback mode
+2025-09-10 19:49:22,302 - __mp_main__ - INFO - Module historical_query loaded successfully
+2025-09-10 19:49:23,247 - __mp_main__ - INFO - Module forecast loaded successfully
+2025-09-10 19:49:23,261 - __mp_main__ - INFO - Module phishing_detector loaded successfully
+2025-09-10 19:49:23,453 - __mp_main__ - INFO - Module comprehensive_analysis loaded successfully
+2025-09-10 19:49:23,541 - __mp_main__ - INFO - Module email_tracking loaded successfully
+2025-09-10 19:49:23,602 - __mp_main__ - INFO - Module email_flagging loaded successfully
+2025-09-10 19:49:23,635 - __mp_main__ - INFO - Module smtp_sender loaded successfully
+2025-09-10 19:49:23,635 - __mp_main__ - INFO - Ensured directory exists: data
+2025-09-10 19:49:23,635 - __mp_main__ - INFO - Ensured directory exists: training
+2025-09-10 19:49:23,636 - __mp_main__ - INFO - Ensured directory exists: logs
+2025-09-10 19:49:23,636 - __mp_main__ - INFO - Training materials mounted at /training
+2025-09-10 19:49:23,741 - watchfiles.main - INFO - 1 change detected
+2025-09-10 19:49:24,098 - watchfiles.main - INFO - 1 change detected
+2025-09-10 19:49:47,480 - watchfiles.main - INFO - 1 change detected

@@ -165,7 +165,7 @@ class ComprehensiveAnalysisEngine:
             # Analyze with URLScan.io (always run - uses real API)
             try:
                 first_url = urls[0]  # Analyze first URL to save quota
-                urlscan_result = await analyze_url_with_urlscan(first_url, PLUGIN_KEYS['urlscan_io'][0])
+                urlscan_result = await analyze_url_with_urlscan(first_url, SHARED_API_KEYS['urlscan_io'][0])
                 url_results['urlscan'] = urlscan_result
             except Exception as e:
                 logger.warning(f"URLScan.io analysis failed: {e}")
@@ -173,7 +173,7 @@ class ComprehensiveAnalysisEngine:
             
             # Google Safe Browsing (always run - uses real API)
             try:
-                google_result = await self._check_google_safebrowsing(urls, PLUGIN_KEYS['google_safebrowsing'][0])
+                google_result = await self._check_google_safebrowsing(urls, SHARED_API_KEYS['google_safebrowsing'][0])
                 url_results['google'] = google_result
             except Exception as e:
                 logger.warning(f"Google Safe Browsing failed: {e}")
@@ -181,7 +181,7 @@ class ComprehensiveAnalysisEngine:
             
             # VirusTotal check (always run - uses real API)
             try:
-                virustotal_result = await self._check_virustotal(urls, PLUGIN_KEYS['virustotal'][0])
+                virustotal_result = await self._check_virustotal(urls, SHARED_API_KEYS['virustotal'][0])
                 url_results['virustotal'] = virustotal_result
             except Exception as e:
                 logger.warning(f"VirusTotal analysis failed: {e}")
@@ -237,8 +237,7 @@ class ComprehensiveAnalysisEngine:
             # Analyze first IP to save quota (always run - uses real API)
             if ips:
                 try:
-                    from .ip_intelligence import SHARED_API_KEYS as IP_KEYS
-                    ip_result = await analyze_ip_with_abuseipdb(ips[0], IP_KEYS['abuseipdb'][0])
+                    ip_result = await analyze_ip_with_abuseipdb(ips[0], SHARED_API_KEYS['abuseipdb'][0])
                     
                     return {
                         'available': True,
@@ -497,10 +496,13 @@ async def get_detailed_analysis(request: dict):
             
             # Google Safe Browsing check
             try:
+                from .plugin_api import analyze_url_with_google_safebrowsing
                 api_keys = SHARED_API_KEYS.get('google_safebrowsing', [])
-                api_key = api_keys[0] if api_keys and api_keys[0] else None
+                api_key = api_keys[0] if api_keys and api_keys[0] and api_keys[0] not in ['your-google-safe-browsing-key', ''] else None
                 if api_key:
-                    safe_browsing_result = await comprehensive_engine._check_google_safebrowsing(urls_from_frontend, api_key)
+                    safe_browsing_result = await analyze_url_with_google_safebrowsing(urls_from_frontend, api_key)
+                else:
+                    safe_browsing_result = {'available': False, 'error': 'Google Safe Browsing API key not configured'}
             except Exception as e:
                 logger.error(f"Google Safe Browsing API check failed: {e}")
                 safe_browsing_result = {'available': False, 'error': str(e)}
@@ -508,67 +510,88 @@ async def get_detailed_analysis(request: dict):
             # URLScan.io check - scan the risky URLs sent from Chrome extension  
             try:
                 api_keys = SHARED_API_KEYS.get('urlscan_io', [])
-                api_key = api_keys[0] if api_keys and api_keys[0] else None
+                api_key = api_keys[0] if api_keys and api_keys[0] and api_keys[0] not in ['your-urlscan-api-key', ''] else None
                 if api_key and urls_from_frontend:
-                    from .plugin_api import analyze_url_with_urlscan
-                    import asyncio
-                    
                     logger.info(f"URLScan.io analyzing risky URLs: {urls_from_frontend}")
                     
-                    # Scan the first risky URL (most suspicious)
+                    # Scan the first risky URL (most suspicious) in quick mode for faster response
                     urlscan_single_result = await asyncio.wait_for(
-                        analyze_url_with_urlscan(urls_from_frontend[0], api_key),
-                        timeout=10.0
+                        analyze_url_with_urlscan(urls_from_frontend[0], api_key, quick_mode=True),
+                        timeout=15.0
                     )
-                    urlscan_result = {
-                        'available': urlscan_single_result.get('available', True),
-                        'malicious_score': urlscan_single_result.get('malicious_score', 0),
-                        'scan_url': urlscan_single_result.get('scan_url', '#'),
-                        'urls_scanned': 1,
-                        'urls_found': len(urls_from_frontend)
-                    }
+                    urlscan_result = urlscan_single_result
+                    # Ensure we have the expected fields
+                    urlscan_result['urls_scanned'] = 1 if urlscan_result.get('available') else 0
+                    urlscan_result['urls_found'] = len(urls_from_frontend)
+                else:
+                    urlscan_result = {'available': False, 'error': 'URLScan.io API key not configured', 'urls_found': len(urls_from_frontend), 'urls_scanned': 0}
             except Exception as e:
                 logger.error(f"URLScan.io API check failed: {e}")
-                urlscan_result = {'available': False, 'error': str(e)}
+                urlscan_result = {'available': False, 'error': str(e), 'urls_found': len(urls_from_frontend), 'urls_scanned': 0}
             
-            # Format API-only results
-            return {
-                "safe_browsing": {
-                    "status": "threat" if safe_browsing_result.get('threats') else "clean",
-                    "message": f"Checked {len(urls_from_frontend)} URLs with Google Safe Browsing",
+            # Format API-only results for Chrome extension
+            safe_browsing_response = {}
+            if safe_browsing_result.get('available'):
+                safe_browsing_response = {
+                    "status": safe_browsing_result.get('status', 'clean'),
+                    "message": f"Checked {safe_browsing_result.get('urls_checked', len(urls_from_frontend))} URLs with Google Safe Browsing",
                     "threats": safe_browsing_result.get('threats', []),
-                    "urls_checked": len(urls_from_frontend),
+                    "urls_checked": safe_browsing_result.get('urls_checked', len(urls_from_frontend)),
+                    "urls_found": safe_browsing_result.get('urls_found', len(urls_from_frontend)),
                     "service": "google_safebrowsing"
-                } if safe_browsing_result.get('available') else {
+                }
+            else:
+                safe_browsing_response = {
                     "status": "error",
-                    "message": f"Google Safe Browsing API failed: {safe_browsing_result.get('error', 'Unknown error')}"
-                },
-                "urlscan_io": {
-                    "status": "malicious" if urlscan_result.get('malicious_score', 0) >= 50 else "clean",
-                    "message": f"URLScan.io analysis completed - {urlscan_result.get('urls_scanned', 0)} URLs successfully scanned",
+                    "message": f"Google Safe Browsing API failed: {safe_browsing_result.get('error', 'Unknown error')}",
+                    "urls_checked": 0,
+                    "urls_found": len(urls_from_frontend)
+                }
+
+            urlscan_response = {}
+            if urlscan_result.get('available'):
+                # Use the actual verdicts from URLScan if available, otherwise create synthetic ones
+                verdicts = urlscan_result.get('verdicts', {})
+                if not verdicts:
+                    # Create synthetic verdicts based on malicious score
+                    score = urlscan_result.get('malicious_score', 0)
+                    verdicts = {
+                        "overall": {
+                            "score": score,
+                            "malicious": score >= 50
+                        },
+                        "engines": urlscan_result.get('engines', {})
+                    }
+                
+                # Adjust message based on scan status
+                status_message = ""
+                if urlscan_result.get('status') == 'submitted':
+                    status_message = f"URLScan.io scan submitted successfully - {urlscan_result.get('urls_scanned', 0)} URLs submitted for analysis"
+                else:
+                    status_message = f"URLScan.io analysis completed - {urlscan_result.get('urls_scanned', 0)} URLs successfully scanned"
+                
+                urlscan_response = {
+                    "status": urlscan_result.get('status', 'clean'),
+                    "message": status_message,
                     "urls_found": urlscan_result.get('urls_found', len(urls_from_frontend)),
                     "urls_scanned": urlscan_result.get('urls_scanned', 0),
-                    "verdicts": {
-                        "overall": {
-                            "score": urlscan_result.get('malicious_score', 0),
-                            "malicious": urlscan_result.get('malicious_score', 0) >= 50
-                        },
-                        "engines": {
-                            "URLVoid": {"malicious": urlscan_result.get('malicious_score', 0) > 70, "result": "malicious" if urlscan_result.get('malicious_score', 0) > 70 else "clean"},
-                            "Phishtank": {"malicious": urlscan_result.get('malicious_score', 0) > 60, "result": "phishing" if urlscan_result.get('malicious_score', 0) > 60 else "clean"},
-                            "OpenPhish": {"malicious": urlscan_result.get('malicious_score', 0) > 80, "result": "phishing" if urlscan_result.get('malicious_score', 0) > 80 else "clean"},
-                            "Malware Domain List": {"malicious": urlscan_result.get('malicious_score', 0) > 75, "result": "malware" if urlscan_result.get('malicious_score', 0) > 75 else "clean"}
-                        }
-                    },
+                    "verdicts": verdicts,
                     "scan_url": urlscan_result.get('scan_url', '#'),
                     "scanned_urls": [{"url": urls_from_frontend[0][:50] + "..." if len(urls_from_frontend[0]) > 50 else urls_from_frontend[0], 
-                                    "score": urlscan_result.get('malicious_score', 0)}] if urls_from_frontend else []
-                } if urlscan_result.get('available') else {
+                                    "score": urlscan_result.get('malicious_score', 0),
+                                    "status": urlscan_result.get('status', 'unknown')}] if urls_from_frontend else []
+                }
+            else:
+                urlscan_response = {
                     "status": "error",
                     "message": f"URLScan.io API failed: {urlscan_result.get('error', 'Unknown error')}",
                     "urls_found": len(urls_from_frontend),
                     "urls_scanned": 0
                 }
+
+            return {
+                "safe_browsing": safe_browsing_response,
+                "urlscan_io": urlscan_response
             }
         
         # Use the comprehensive analysis engine to get REAL API results
@@ -651,11 +674,13 @@ async def get_safe_browsing_analysis(request: dict):
         
         # Use real Google Safe Browsing API
         api_keys = SHARED_API_KEYS.get('google_safebrowsing', [])
-        api_key = api_keys[0] if api_keys and api_keys[0] else None
+        api_key = api_keys[0] if api_keys and api_keys[0] and api_keys[0] not in ['your-google-safe-browsing-key', ''] else None
         if not api_key:
             return {
-                "status": "unavailable",
-                "message": "Google Safe Browsing API key not configured"
+                "status": "error",
+                "message": "Google Safe Browsing API key not configured",
+                "urls_found": len(urls),
+                "urls_checked": 0
             }
         
         # Track actual counts - prioritize suspicious URLs for faster results
@@ -682,25 +707,26 @@ async def get_safe_browsing_analysis(request: dict):
         # Add timeout for Google Safe Browsing - reduced timeout for faster response
         import asyncio
         try:
+            from .plugin_api import analyze_url_with_google_safebrowsing
             result = await asyncio.wait_for(
-                comprehensive_engine._check_google_safebrowsing(urls_to_check, api_key),
+                analyze_url_with_google_safebrowsing(urls_to_check, api_key),
                 timeout=15.0  # Reduced to 15 seconds
             )
         except asyncio.TimeoutError:
             return {
                 "status": "error", 
-                "message": f"Request timed out",
+                "message": f"Google Safe Browsing request timed out",
                 "urls_found": urls_found,
                 "urls_checked": 0
             }
         
         if result.get('available'):
             return {
-                "status": "threat" if result.get('threats') else "clean",
-                "message": f"Checked {urls_checked} URLs with Google Safe Browsing",
+                "status": result.get('status', 'clean'),
+                "message": f"Checked {result.get('urls_checked', urls_checked)} URLs with Google Safe Browsing",
                 "threats": result.get('threats', []),
-                "urls_checked": urls_checked,
-                "urls_found": urls_found,
+                "urls_checked": result.get('urls_checked', urls_checked),
+                "urls_found": result.get('urls_found', urls_found),
                 "service": "google_safebrowsing"
             }
         else:
@@ -749,10 +775,10 @@ async def get_urlscan_analysis(request: dict):
         
         # Use real URLScan.io API
         api_keys = SHARED_API_KEYS.get('urlscan_io', [])
-        api_key = api_keys[0] if api_keys and api_keys[0] else None
+        api_key = api_keys[0] if api_keys and api_keys[0] and api_keys[0] not in ['your-urlscan-api-key', ''] else None
         if not api_key:
             return {
-                "status": "unavailable",
+                "status": "error",
                 "message": "URLScan.io API key not configured",
                 "urls_found": urls_found,
                 "urls_scanned": 0
@@ -785,7 +811,7 @@ async def get_urlscan_analysis(request: dict):
                 from .plugin_api import analyze_url_with_urlscan
                 import asyncio
                 result = await asyncio.wait_for(
-                    analyze_url_with_urlscan(url, api_key),
+                    analyze_url_with_urlscan(url, api_key, quick_mode=True),
                     timeout=12.0  # Reduced to 12 seconds per URL
                 )
                 return result

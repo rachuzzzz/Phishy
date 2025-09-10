@@ -3688,6 +3688,17 @@ Your AI cybersecurity assistant is ready to help with security analysis, phishin
              */
             let formatted = content;
             
+            // FIXED: Handle HTML tags that appear as literal text in AI responses
+            // Convert HTML entities and literal HTML tags back to plain text for processing
+            formatted = formatted.replace(/&lt;/g, '<');
+            formatted = formatted.replace(/&gt;/g, '>');
+            formatted = formatted.replace(/&amp;/g, '&');
+            formatted = formatted.replace(/&quot;/g, '"');
+            
+            // Remove literal HTML tags that are being displayed as text
+            // This fixes the issue where AI responses contain raw HTML tags
+            formatted = formatted.replace(/<[^>]*>/g, '');
+            
             // Format section headers with emojis
             formatted = formatted.replace(
                 /^(📊|🎯|⚠️|✅|💡|🚨|📈|📉|🔒|📧)\s*\*\*([^*]+)\*\*/gm,

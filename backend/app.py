@@ -91,8 +91,11 @@ def load_route_module(module_name: str, prefix: str, tags: list):
             # Create __init__.py
             (routes_dir / "__init__.py").touch()
         
-        # Dynamic import
-        module = __import__(f"routes.{module_name}", fromlist=[module_name])
+        # Dynamic import - try backend.routes first, then routes
+        try:
+            module = __import__(f"backend.routes.{module_name}", fromlist=[module_name])
+        except ImportError:
+            module = __import__(f"routes.{module_name}", fromlist=[module_name])
         
         if hasattr(module, 'router'):
             app.include_router(module.router, prefix=prefix, tags=tags)
@@ -120,6 +123,7 @@ load_route_module("simple_intelligent_query", "/ai", ["🤖 Intelligent Query Ro
 load_route_module("historical_query", "/query", ["🔍 Historical Query"])
 load_route_module("forecast", "/forecast", ["📈 Forecasting"])
 load_route_module("phishing_detector", "/detector", ["🛡️ AI Phishing Detection"])
+load_route_module("comprehensive_analysis", "/comprehensive", ["🛡️ Comprehensive Security Analysis"])
 load_route_module("email_tracking", "/email-track", ["📧 Email Tracking"])
 load_route_module("email_flagging", "/email-flagging", ["🚩 Flagged Emails"])
 load_route_module("smtp_sender", "/smtp", ["📧 SMTP Email Sender"])
