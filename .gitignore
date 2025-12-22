@@ -8,3 +8,6 @@ __pycache__/
 # Ignore environment variables
 .env
 backend/logs/*.log
+
+# Claude Code settings
+.claude/
