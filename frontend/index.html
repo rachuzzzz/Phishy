@@ -2471,7 +2471,7 @@
                 <div class="header-actions">
                     <button class="header-btn" onclick="clearCurrentView()">Clear</button>
                     <button class="header-btn" onclick="refreshData()">Refresh</button>
-                    <button class="header-btn" onclick="window.open('http://localhost:8080/docs', '_blank')">API Docs</button>
+                    <button class="header-btn" onclick="window.open('http://localhost:5000/docs', '_blank')">API Docs</button>
                 </div>
             </div>
 
@@ -3386,7 +3386,7 @@ Hi! I'm your advanced AI cybersecurity assistant, ready to enhance your organiza
     </div>
 
     <script>
-        const API_BASE = 'http://localhost:8080';
+        const API_BASE = 'http://localhost:5000';
         let currentMode = 'chat';
         let generatedEmailData = null;
         let isLoading = false;
@@ -3956,27 +3956,99 @@ Your AI cybersecurity assistant is ready to help with security analysis, phishin
                 generatedEmailData = data;
 
                 // Parse subject and content from generated email
-                // Use pixel version if checkbox is checked and pixel version exists
-                const emailContent = includePixel && data.email_content_with_pixel ? 
-                    data.email_content_with_pixel : data.email_content;
-                
-                const emailLines = emailContent.split('\n');
                 let subject = '';
-                let content = '';
-                let contentStarted = false;
-
-                for (let line of emailLines) {
-                    if (line.startsWith('Subject:')) {
-                        subject = line.replace('Subject:', '').trim();
-                    } else if (line.trim() === '' && subject) {
-                        contentStarted = true;
-                    } else if (contentStarted) {
-                        content += line + '\n';
+                let displayContent = '';
+                let sendContent = '';
+                
+                // Try to get separate subject field first
+                if (data.subject) {
+                    subject = data.subject;
+                } else {
+                    // Extract subject from plain text version if available
+                    if (data.email_content) {
+                        const lines = data.email_content.split('\n');
+                        for (let line of lines) {
+                            if (line.startsWith('Subject:')) {
+                                subject = line.replace('Subject:', '').trim();
+                                break;
+                            }
+                        }
+                    }
+                    
+                    // If still no subject, extract from HTML title tag
+                    if (!subject && data.email_content_html) {
+                        const titleMatch = data.email_content_html.match(/<title>(.*?)<\/title>/i);
+                        if (titleMatch) {
+                            subject = titleMatch[1].trim();
+                        }
                     }
                 }
+                
+                // For display: use plain text version if available, otherwise convert HTML to text
+                if (data.email_content) {
+                    const lines = data.email_content.split('\n');
+                    let contentStarted = false;
+                    for (let line of lines) {
+                        if (line.startsWith('Subject:')) {
+                            // Skip subject line
+                        } else if (line.trim() === '') {
+                            // Empty line - start content after subject or preserve spacing
+                            if (subject || contentStarted) {
+                                contentStarted = true;
+                                displayContent += '\n';
+                            }
+                        } else {
+                            // Content line
+                            contentStarted = true;
+                            displayContent += line + '\n';
+                        }
+                    }
+                } else if (data.email_content_html) {
+                    // Convert HTML to plain text for display with proper formatting
+                    displayContent = data.email_content_html
+                        // Remove style and script tags
+                        .replace(/<style[^>]*>.*?<\/style>/gis, '')
+                        .replace(/<script[^>]*>.*?<\/script>/gis, '')
+                        // Convert block elements to line breaks
+                        .replace(/<\/p>/gi, '\n\n')
+                        .replace(/<br\s*\/?>/gi, '\n')
+                        .replace(/<\/div>/gi, '\n')
+                        .replace(/<\/h[1-6]>/gi, '\n\n')
+                        .replace(/<\/li>/gi, '\n')
+                        .replace(/<\/tr>/gi, '\n')
+                        .replace(/<\/td>/gi, ' ')
+                        // Remove remaining HTML tags
+                        .replace(/<[^>]+>/g, '')
+                        // Decode HTML entities
+                        .replace(/&nbsp;/g, ' ')
+                        .replace(/&lt;/g, '<')
+                        .replace(/&gt;/g, '>')
+                        .replace(/&amp;/g, '&')
+                        .replace(/&quot;/g, '"')
+                        .replace(/&#39;/g, "'")
+                        // Clean up whitespace but preserve line breaks
+                        .replace(/[ \t]+/g, ' ')
+                        .replace(/\n\s+/g, '\n')
+                        .replace(/\n{3,}/g, '\n\n')
+                        .trim();
+                }
+                
+                // For sending: always use HTML version if available
+                if (includePixel && data.email_content_html_with_pixel) {
+                    sendContent = data.email_content_html_with_pixel;
+                } else if (data.email_content_html) {
+                    sendContent = data.email_content_html;
+                } else {
+                    // Fallback: create basic HTML from plain text
+                    sendContent = `<html><body><div style="font-family: Arial, sans-serif; line-height: 1.6;">${displayContent.replace(/\n/g, '<br>')}</div></body></html>`;
+                }
+                
+                // Store both versions for sending
+                window.generatedEmailHtml = sendContent;
+                window.generatedEmailText = displayContent;
 
                 document.getElementById('emailSubject').value = subject;
-                document.getElementById('emailContent').value = content.trim();
+                document.getElementById('emailContent').value = displayContent;
                 
                 // Show tracking info in status
                 if (includePixel && data.tracking_pixel_url) {
@@ -4041,10 +4113,11 @@ Your AI cybersecurity assistant is ready to help with security analysis, phishin
         async function sendEmail() {
             const targetEmail = document.getElementById('targetEmail').value.trim();
             const subject = document.getElementById('emailSubject').value.trim();
-            const content = document.getElementById('emailContent').value.trim();
+            const displayContent = document.getElementById('emailContent').value.trim();
+            const htmlContent = window.generatedEmailHtml || displayContent;
             const smtpConfig = getSMTPConfig();
 
-            if (!targetEmail || !subject || !content) {
+            if (!targetEmail || !subject || !displayContent) {
                 showStatus('sendingStatus', 'Please generate an email first and fill in all fields.', 'error');
                 return;
             }
@@ -4061,8 +4134,9 @@ Your AI cybersecurity assistant is ready to help with security analysis, phishin
                         ...smtpConfig,
                         recipient: targetEmail,
                         subject: subject,
-                        body: content,
-                        is_html: false,
+                        html_body: htmlContent,
+                        body: displayContent,
+                        is_html: true,
                         action_id: generatedEmailData?.action_id || 'manual-send'
                     })
                 });
@@ -5566,11 +5640,12 @@ This analysis provides data-driven insights based on ${dateRange} days of monito
             }
             
             const subject = document.getElementById('emailSubject').value;
-            const content = document.getElementById('emailContent').value;
+            const displayContent = document.getElementById('emailContent').value;
+            const htmlContent = window.generatedEmailHtml || displayContent;
             const username = document.getElementById('smtpUsername').value;
             const password = document.getElementById('smtpPassword').value;
             
-            if (!subject || !content || !username || !password) {
+            if (!subject || !displayContent || !username || !password) {
                 showStatus('sendingStatus', 'Please fill in all required fields', 'error');
                 return;
             }
@@ -5595,7 +5670,8 @@ This analysis provides data-driven insights based on ${dateRange} days of monito
                             password: password,
                             recipient: recipient,
                             subject: subject,
-                            body: content,
+                            html_body: htmlContent,
+                            body: displayContent,
                             is_html: true
                         })
                     });
@@ -5745,26 +5821,99 @@ This analysis provides data-driven insights based on ${dateRange} days of monito
                 const data = await response.json();
                 
                 // Parse subject and content from generated email
-                // Use pixel version if checkbox is checked and pixel version exists
-                const emailContent = includePixel && data.email_content_with_pixel ? 
-                    data.email_content_with_pixel : data.email_content;
-                
-                const emailLines = emailContent.split('\n');
                 let subject = '';
-                let content = '';
-                let contentStarted = false;
-
-                for (let line of emailLines) {
-                    if (line.startsWith('Subject:')) {
-                        subject = line.replace('Subject:', '').trim();
-                    } else if (contentStarted || (!line.startsWith('Subject:') && line.trim() !== '')) {
-                        contentStarted = true;
-                        content += line + '\n';
+                let displayContent = '';
+                let sendContent = '';
+                
+                // Try to get separate subject field first
+                if (data.subject) {
+                    subject = data.subject;
+                } else {
+                    // Extract subject from plain text version if available
+                    if (data.email_content) {
+                        const lines = data.email_content.split('\n');
+                        for (let line of lines) {
+                            if (line.startsWith('Subject:')) {
+                                subject = line.replace('Subject:', '').trim();
+                                break;
+                            }
+                        }
+                    }
+                    
+                    // If still no subject, extract from HTML title tag
+                    if (!subject && data.email_content_html) {
+                        const titleMatch = data.email_content_html.match(/<title>(.*?)<\/title>/i);
+                        if (titleMatch) {
+                            subject = titleMatch[1].trim();
+                        }
                     }
                 }
                 
+                // For display: use plain text version if available, otherwise convert HTML to text
+                if (data.email_content) {
+                    const lines = data.email_content.split('\n');
+                    let contentStarted = false;
+                    for (let line of lines) {
+                        if (line.startsWith('Subject:')) {
+                            // Skip subject line
+                        } else if (line.trim() === '') {
+                            // Empty line - start content after subject or preserve spacing
+                            if (subject || contentStarted) {
+                                contentStarted = true;
+                                displayContent += '\n';
+                            }
+                        } else {
+                            // Content line
+                            contentStarted = true;
+                            displayContent += line + '\n';
+                        }
+                    }
+                } else if (data.email_content_html) {
+                    // Convert HTML to plain text for display with proper formatting
+                    displayContent = data.email_content_html
+                        // Remove style and script tags
+                        .replace(/<style[^>]*>.*?<\/style>/gis, '')
+                        .replace(/<script[^>]*>.*?<\/script>/gis, '')
+                        // Convert block elements to line breaks
+                        .replace(/<\/p>/gi, '\n\n')
+                        .replace(/<br\s*\/?>/gi, '\n')
+                        .replace(/<\/div>/gi, '\n')
+                        .replace(/<\/h[1-6]>/gi, '\n\n')
+                        .replace(/<\/li>/gi, '\n')
+                        .replace(/<\/tr>/gi, '\n')
+                        .replace(/<\/td>/gi, ' ')
+                        // Remove remaining HTML tags
+                        .replace(/<[^>]+>/g, '')
+                        // Decode HTML entities
+                        .replace(/&nbsp;/g, ' ')
+                        .replace(/&lt;/g, '<')
+                        .replace(/&gt;/g, '>')
+                        .replace(/&amp;/g, '&')
+                        .replace(/&quot;/g, '"')
+                        .replace(/&#39;/g, "'")
+                        // Clean up whitespace but preserve line breaks
+                        .replace(/[ \t]+/g, ' ')
+                        .replace(/\n\s+/g, '\n')
+                        .replace(/\n{3,}/g, '\n\n')
+                        .trim();
+                }
+                
+                // For sending: always use HTML version if available
+                if (includePixel && data.email_content_html_with_pixel) {
+                    sendContent = data.email_content_html_with_pixel;
+                } else if (data.email_content_html) {
+                    sendContent = data.email_content_html;
+                } else {
+                    // Fallback: create basic HTML from plain text
+                    sendContent = `<html><body><div style="font-family: Arial, sans-serif; line-height: 1.6;">${displayContent.replace(/\n/g, '<br>')}</div></body></html>`;
+                }
+                
+                // Store both versions for sending
+                window.generatedEmailHtml = sendContent;
+                window.generatedEmailText = displayContent;
+
                 document.getElementById('emailSubject').value = subject;
-                document.getElementById('emailContent').value = content.trim();
+                document.getElementById('emailContent').value = displayContent;
                 
                 // Show tracking info in status
                 if (includePixel && data.tracking_pixel_url) {

@@ -1,4 +1,3 @@
-# app.py - Updated for port safety and improved configuration
 import os
 import sys
 from pathlib import Path
@@ -9,7 +8,6 @@ from fastapi.responses import JSONResponse
 import logging
 from datetime import datetime
 
-# Load environment variables FIRST
 try:
     from dotenv import load_dotenv
     load_dotenv()
@@ -17,13 +15,12 @@ try:
 except ImportError:
     print("python-dotenv not installed. Using default configuration.")
 
-# Port configuration - UPDATED to avoid Splunk conflicts
-BACKEND_PORT = int(os.getenv("BACKEND_PORT", "8080"))  # Changed from 8000
-FRONTEND_PORT = int(os.getenv("FRONTEND_PORT", "3001"))  # Changed from 3000
+# Port configuration - 5000 for ngrok compatibility
+BACKEND_PORT = int(os.getenv("BACKEND_PORT", "5000"))
+FRONTEND_PORT = int(os.getenv("FRONTEND_PORT", "3001"))
 HOST = os.getenv("HOST", "0.0.0.0")
 DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 
-# CORS origins - UPDATED for new ports and Chrome extensions
 ALLOWED_ORIGINS = [
     f"http://localhost:{FRONTEND_PORT}",
     f"http://127.0.0.1:{FRONTEND_PORT}",
@@ -36,11 +33,10 @@ ALLOWED_ORIGINS = [
 ]
 
 print(f"Phishy Platform Configuration:")
-print(f"   Backend Port: {BACKEND_PORT} (avoiding Splunk port 8000)")
+print(f"   Backend Port: {BACKEND_PORT} (ngrok-friendly)")
 print(f"   Frontend Port: {FRONTEND_PORT}")
 print(f"   CORS Origins: {ALLOWED_ORIGINS}")
 
-# Setup logging
 log_dir = Path("logs")
 log_dir.mkdir(exist_ok=True)
 
@@ -54,7 +50,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Initialize FastAPI
 app = FastAPI(
     title="Phishy - Advanced Cybersecurity Training Platform",
     version="2.1.0",
@@ -67,7 +62,6 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
-# CORS config for frontend - UPDATED for permissive access
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Allow all origins for development/ngrok
@@ -76,22 +70,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Track loaded and failed routes
 routes_loaded = []
 routes_failed = []
 
-# Import routes with comprehensive error handling
 def load_route_module(module_name: str, prefix: str, tags: list):
     """Helper function to load route modules with error handling"""
     try:
-        # Create routes directory if it doesn't exist
         routes_dir = Path("routes")
         if not routes_dir.exists():
             routes_dir.mkdir()
-            # Create __init__.py
             (routes_dir / "__init__.py").touch()
-        
-        # Dynamic import - try backend.routes first, then routes
+
         try:
             module = __import__(f"backend.routes.{module_name}", fromlist=[module_name])
         except ImportError:
@@ -111,7 +100,6 @@ def load_route_module(module_name: str, prefix: str, tags: list):
         routes_failed.append(f"{module_name}: {str(e)}")
         logger.error(f"Unexpected error loading {module_name}: {e}")
 
-# Load all route modules
 logger.info("Loading route modules...")
 
 load_route_module("click_tracker", "/track", ["📊 Click Tracking"])
@@ -119,8 +107,10 @@ load_route_module("phishing", "/phishing", ["🎯 Phishing Simulation"])
 load_route_module("llm_generator", "/llm", ["🧠 LLM Email Generation"])
 load_route_module("analytics", "/analytics", ["📊 Advanced Analytics"])
 load_route_module("classifier_endpoint", "/ai/classifier", ["🤖 Intent Classifier"])
-load_route_module("simple_intelligent_query", "/ai", ["🤖 Intelligent Query Routing"])
-load_route_module("historical_query", "/query", ["🔍 Historical Query"])
+# Removed duplicate query handlers - keeping only smart_query_handler
+# load_route_module("simple_intelligent_query", "/ai", ["🤖 Intelligent Query Routing"])  # DISABLED - duplicate
+# load_route_module("intelligent_query", "/intelligent", ["🧠 Smart Intelligent Query"])  # DISABLED - duplicate
+load_route_module("smart_query_handler", "/smart", ["🔍 Smart Query Handler"])
 load_route_module("forecast", "/forecast", ["📈 Forecasting"])
 load_route_module("phishing_detector", "/detector", ["🛡️ AI Phishing Detection"])
 load_route_module("comprehensive_analysis", "/comprehensive", ["🛡️ Comprehensive Security Analysis"])
@@ -128,7 +118,6 @@ load_route_module("email_tracking", "/email-track", ["📧 Email Tracking"])
 load_route_module("email_flagging", "/email-flagging", ["🚩 Flagged Emails"])
 load_route_module("smtp_sender", "/smtp", ["📧 SMTP Email Sender"])
 
-# Setup directories
 def setup_directories():
     """Create necessary directories"""
     directories = ["data", "training", "logs"]
@@ -138,7 +127,6 @@ def setup_directories():
 
 setup_directories()
 
-# Mount training materials as static files
 def setup_static_files():
     """Setup static file serving"""
     try:
@@ -229,7 +217,6 @@ def setup_static_files():
 
 setup_static_files()
 
-# Initialize data files
 def initialize_data_files():
     """Initialize CSV files with proper headers"""
     csv_file = Path("data/click_logs.csv")
@@ -243,7 +230,6 @@ def initialize_data_files():
 
 initialize_data_files()
 
-# Global exception handler
 @app.exception_handler(Exception)
 async def global_exception_handler(request, exc):
     logger.error(f"Unhandled exception: {exc}", exc_info=True)
@@ -256,21 +242,18 @@ async def global_exception_handler(request, exc):
         }
     )
 
-# Health check endpoint - UPDATED with port info
 @app.get("/health", tags=["System"])
 async def health_check():
     """Comprehensive health check"""
     data_dir = Path("data")
     csv_file = data_dir / "click_logs.csv"
-    
-    # Check file system
+
     fs_status = {
         "data_directory_exists": data_dir.exists(),
         "csv_file_exists": csv_file.exists(),
         "csv_file_size": csv_file.stat().st_size if csv_file.exists() else 0
     }
-    
-    # Check data integrity
+
     data_status = {"csv_readable": False, "record_count": 0}
     if csv_file.exists():
         try:
@@ -297,7 +280,6 @@ async def health_check():
         "available_endpoints": len(app.routes)
     }
 
-# Root endpoint with enhanced information - UPDATED URLs
 @app.get("/", tags=["System"])
 def root_info():
     """Root endpoint with platform information"""
@@ -343,7 +325,6 @@ def root_info():
         }
     }
 
-# Startup event - UPDATED logging
 @app.on_event("startup")
 async def startup_event():
     """Startup event handler"""
@@ -359,7 +340,6 @@ async def startup_event():
         logger.warning(f"Failed modules: {', '.join(routes_failed)}")
         logger.info("Some features may be running in fallback mode")
 
-# Shutdown event
 @app.on_event("shutdown")
 async def shutdown_event():
     """Shutdown event handler"""

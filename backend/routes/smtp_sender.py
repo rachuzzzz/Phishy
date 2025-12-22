@@ -1,5 +1,3 @@
-# Enhanced SMTP Email Sender for Phishy AI Platform
-
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 import smtplib
@@ -24,7 +22,8 @@ class EmailSendRequest(BaseModel):
     recipient: str
     subject: str
     body: str
-    is_html: Optional[bool] = False
+    html_body: Optional[str] = None  # HTML version of email
+    is_html: Optional[bool] = None  # Auto-detect if not specified
     action_id: Optional[str] = None
 
 class EmailResponse(BaseModel):
@@ -79,22 +78,54 @@ async def send_email(request: EmailSendRequest):
         msg['From'] = request.username
         msg['To'] = request.recipient
         msg['Date'] = datetime.utcnow().strftime('%a, %d %b %Y %H:%M:%S +0000')
-        
-        # Create content
+
+        if request.is_html is None:
+            # Auto-detect HTML if html_body is provided or body contains HTML tags
+            request.is_html = (
+                request.html_body is not None or 
+                ('<html>' in request.body.lower() and '</html>' in request.body.lower()) or
+                ('<p>' in request.body.lower() or '<div>' in request.body.lower())
+            )
+
+        html_content = request.html_body if request.html_body else request.body
+        plain_content = request.body
+
         if request.is_html:
-            content_part = MIMEText(request.body, 'html')
+            import re
+            if request.html_body:
+                plain_text = html_content
+                plain_text = re.sub(r'</p>', '\n\n', plain_text, flags=re.IGNORECASE)
+                plain_text = re.sub(r'<br\s*/?>', '\n', plain_text, flags=re.IGNORECASE)
+                plain_text = re.sub(r'</div>', '\n', plain_text, flags=re.IGNORECASE)
+                plain_text = re.sub(r'</h[1-6]>', '\n\n', plain_text, flags=re.IGNORECASE)
+                plain_text = re.sub('<[^<]+?>', '', plain_text)
+                plain_text = plain_text.replace('&nbsp;', ' ').replace('&lt;', '<').replace('&gt;', '>')
+                plain_text = plain_text.replace('&amp;', '&').replace('&quot;', '"')
+                plain_text = re.sub(r'[ \t]+', ' ', plain_text)
+                plain_text = re.sub(r'\n[ \t]+', '\n', plain_text)
+                plain_text = re.sub(r'\n{3,}', '\n\n', plain_text)
+                plain_text = plain_text.strip()
+            else:
+                plain_text = plain_content
+
+            plain_part = MIMEText(plain_text, 'plain', 'utf-8')
+            msg.attach(plain_part)
+
+            html_part = MIMEText(html_content, 'html', 'utf-8')
+            msg.attach(html_part)
+            
+            logger.info(f"Sending HTML email with fallback plain text to {request.recipient}")
         else:
-            content_part = MIMEText(request.body, 'plain')
-        
-        msg.attach(content_part)
-        
-        # Connect and send email with timeout
+            content_part = MIMEText(plain_content, 'plain', 'utf-8')
+            msg.attach(content_part)
+            logger.info(f"Sending plain text email to {request.recipient}")
+
         with smtplib.SMTP(server, port, timeout=30) as smtp_server:
             smtp_server.set_debuglevel(0)  # Set to 1 for debugging
             smtp_server.starttls()
             smtp_server.login(request.username, request.password)
             smtp_server.send_message(msg)
-            
+
         sent_time = datetime.utcnow().isoformat() + 'Z'
         message_id = f"phishy_{request.action_id or 'manual'}_{hash(request.recipient + request.subject)}"
         
@@ -106,7 +137,7 @@ async def send_email(request: EmailSendRequest):
             message=f"Email sent successfully to {request.recipient} via {server}",
             sent_at=sent_time
         )
-        
+
     except smtplib.SMTPAuthenticationError as e:
         logger.error(f"SMTP authentication failed: {e}")
         raise HTTPException(
@@ -117,7 +148,7 @@ async def send_email(request: EmailSendRequest):
                 "error_type": "authentication"
             }
         )
-        
+
     except smtplib.SMTPRecipientsRefused as e:
         logger.error(f"SMTP recipients refused: {e}")
         raise HTTPException(
@@ -128,7 +159,7 @@ async def send_email(request: EmailSendRequest):
                 "error_type": "recipient"
             }
         )
-        
+
     except smtplib.SMTPException as e:
         logger.error(f"SMTP error: {e}")
         raise HTTPException(
@@ -152,8 +183,8 @@ async def send_email(request: EmailSendRequest):
         )
 
 class SMTPTestRequest(BaseModel):
-    username: str  # sender's email
-    password: str  # app password
+    username: str
+    password: str
 
 @router.post("/test-connection", response_model=SMTPTestResponse)
 async def test_smtp_connection(request: SMTPTestRequest):
@@ -161,22 +192,21 @@ async def test_smtp_connection(request: SMTPTestRequest):
     Test SMTP connection without sending email - auto-detects server based on email domain
     """
     try:
-        # Auto-detect SMTP settings
         server, port = get_smtp_config(request.username)
-        
+
         logger.info(f"Testing SMTP connection to {server}:{port} with user {request.username}")
-        
+
         with smtplib.SMTP(server, port, timeout=30) as smtp_server:
             smtp_server.starttls()
             smtp_server.login(request.username, request.password)
-            
+
         logger.info(f"SMTP test successful for {request.username} on {server}")
-        
+
         return SMTPTestResponse(
             status="success",
             message=f"SMTP connection successful to {server}:{port} (auto-detected from {request.username.split('@')[-1]})"
         )
-        
+
     except smtplib.SMTPAuthenticationError as e:
         logger.error(f"SMTP authentication failed for {request.username}: {e}")
         raise HTTPException(
@@ -187,7 +217,7 @@ async def test_smtp_connection(request: SMTPTestRequest):
                 "error_type": "authentication"
             }
         )
-        
+
     except smtplib.SMTPConnectError as e:
         server, port = get_smtp_config(request.username)
         logger.error(f"SMTP connection failed to {server}:{port}: {e}")
@@ -199,7 +229,7 @@ async def test_smtp_connection(request: SMTPTestRequest):
                 "error_type": "connection"
             }
         )
-        
+
     except smtplib.SMTPException as e:
         logger.error(f"SMTP error for {request.username}: {e}")
         raise HTTPException(
@@ -222,12 +252,9 @@ async def test_smtp_connection(request: SMTPTestRequest):
             }
         )
 
-# Additional endpoints for email management
 @router.get("/smtp-providers")
 async def get_smtp_providers():
-    """
-    Get common SMTP provider configurations
-    """
+    """Get common SMTP provider configurations"""
     return {
         "providers": [
             {
@@ -263,14 +290,11 @@ async def get_smtp_providers():
 
 @router.get("/diagnose/{email}")
 async def diagnose_smtp_config(email: str):
-    """
-    Diagnose SMTP configuration for a given email address
-    """
+    """Diagnose SMTP configuration for a given email address"""
     try:
         domain = email.split('@')[-1].lower()
         server, port = get_smtp_config(email)
-        
-        # Test basic connectivity
+
         import socket
         connectivity_status = "unknown"
         try:
@@ -278,7 +302,7 @@ async def diagnose_smtp_config(email: str):
             connectivity_status = "reachable"
         except Exception as e:
             connectivity_status = f"unreachable: {str(e)}"
-        
+
         return {
             "email": email,
             "domain": domain,
@@ -292,7 +316,7 @@ async def diagnose_smtp_config(email: str):
                 "yahoo.com": "Requires App Password",
                 "default": "Check with your email provider"
             }.get(domain, "Check with your email provider"),
-            "setup_instructions": {
+            "instructions": {
                 "gmail.com": [
                     "1. Enable 2-factor authentication",
                     "2. Go to Google Account > Security > App Passwords",
@@ -310,15 +334,13 @@ async def diagnose_smtp_config(email: str):
                 ]
             }.get(domain, ["Check your email provider's SMTP documentation"])
         }
-        
+
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to diagnose SMTP config: {str(e)}")
 
 @router.get("/health")
 async def smtp_health():
-    """
-    SMTP service health check
-    """
+    """SMTP service health check"""
     return {
         "status": "healthy",
         "service": "smtp_sender",

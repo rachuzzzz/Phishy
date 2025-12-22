@@ -1,10 +1,13 @@
-"""
-Simple classifier endpoint that just exposes the intent prediction function
-"""
-
 import logging
+import sys
+from pathlib import Path
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+
+backend_dir = Path(__file__).parent.parent
+if str(backend_dir) not in sys.path:
+    sys.path.insert(0, str(backend_dir))
+
 from classifier import predict_intent
 
 router = APIRouter()

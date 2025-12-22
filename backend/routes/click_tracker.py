@@ -11,26 +11,21 @@ import pandas as pd
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
-# Setup data paths
 DATA_DIR = Path("data")
 LOG_FILE = DATA_DIR / "click_logs.csv"
 TEXT_LOG_FILE = DATA_DIR / "click_logs.txt"
 
-# Ensure data directory exists
 DATA_DIR.mkdir(exist_ok=True)
 
-# Setup file logging
 file_handler = logging.FileHandler(TEXT_LOG_FILE)
 file_handler.setLevel(logging.INFO)
 file_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 file_handler.setFormatter(file_formatter)
 
-# Create a logger specifically for click tracking
 click_logger = logging.getLogger('click_tracker')
 click_logger.addHandler(file_handler)
 click_logger.setLevel(logging.INFO)
 
-# Initialize CSV file with headers if it doesn't exist
 def initialize_csv():
     """Initialize CSV file with proper headers"""
     if not LOG_FILE.exists():
@@ -38,7 +33,7 @@ def initialize_csv():
             with open(LOG_FILE, mode="w", newline="", encoding='utf-8') as file:
                 writer = csv.writer(file)
                 writer.writerow(["timestamp", "user_email", "action_id", "ip_address", "user_agent", "referer"])
-            logger.info("📄 Initialized click_logs.csv with headers")
+            logger.info("Initialized click_logs.csv with headers")
         except Exception as e:
             logger.error(f"Failed to initialize CSV file: {e}")
             raise
@@ -46,7 +41,7 @@ def initialize_csv():
 initialize_csv()
 
 def get_client_info(request: Request) -> Dict[str, str]:
-    """Extract client information from request"""
+    """Extract client IP, user agent, and referer from request"""
     return {
         "ip_address": request.client.host if request.client else "unknown",
         "user_agent": request.headers.get("user-agent", "unknown"),
@@ -83,26 +78,21 @@ def track_click(
     This endpoint logs the click event and redirects the user to a training page.
     """
     try:
-        # Get client information
         client_info = get_client_info(request)
         timestamp = datetime.utcnow().isoformat()
-        
-        # Log to text file
+
         log_entry = f"{timestamp} - {user_email} - {action} - {client_info['ip_address']} - {client_info['user_agent'][:100]}"
         click_logger.info(log_entry)
-        
-        # Log to CSV file
+
         log_click_to_csv(timestamp, user_email, action, client_info)
-        
+
         logger.info(f"Tracked click: {user_email} -> {action}")
-        
-        # Validate redirect URL for security
+
         if redirect_url and not redirect_url.startswith(('http://', 'https://', '/')):
             redirect_url = "/training/phishing-awareness.html"
-        
-        # Redirect to training page
+
         return RedirectResponse(url=redirect_url, status_code=302)
-        
+
     except Exception as e:
         logger.error(f"Error tracking click: {e}")
         # Still redirect to training page even if logging fails
@@ -124,35 +114,29 @@ def get_click_logs(
     try:
         if not LOG_FILE.exists():
             return JSONResponse(content={"message": "No log data available", "data": []})
-        
-        # Read CSV data
+
         df = pd.read_csv(LOG_FILE)
-        
+
         if df.empty:
             return JSONResponse(content={"message": "No log data available", "data": []})
-        
-        # Convert timestamp to datetime for filtering
+
         df['timestamp'] = pd.to_datetime(df['timestamp'])
-        
-        # Apply filters
+
         if user_email:
             df = df[df['user_email'].str.contains(user_email, case=False, na=False)]
         
         if action_id:
             df = df[df['action_id'].str.contains(action_id, case=False, na=False)]
-        
+
         if days:
             cutoff_date = datetime.utcnow() - pd.Timedelta(days=days)
             df = df[df['timestamp'] >= cutoff_date]
-        
-        # Apply limit
+
         df = df.tail(limit)
-        
-        # Convert timestamp back to string for JSON serialization
+
         df['timestamp'] = df['timestamp'].dt.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
-        
+
         if format == "csv":
-            # Return CSV file
             filtered_file = DATA_DIR / "filtered_logs.csv"
             df.to_csv(filtered_file, index=False)
             return FileResponse(
@@ -161,7 +145,6 @@ def get_click_logs(
                 filename=f"click_logs_filtered_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.csv"
             )
         else:
-            # Return JSON
             records = df.to_dict('records')
             return JSONResponse(content={
                 "message": f"Retrieved {len(records)} log entries",
@@ -174,7 +157,7 @@ def get_click_logs(
                 },
                 "data": records
             })
-    
+
     except Exception as e:
         logger.error(f"Error retrieving logs: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to retrieve logs: {str(e)}")
@@ -189,13 +172,13 @@ def download_csv():
     try:
         if not LOG_FILE.exists():
             raise HTTPException(status_code=404, detail="No log file found")
-        
+
         return FileResponse(
             LOG_FILE,
             media_type='text/csv',
             filename=f"click_logs_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.csv"
         )
-    
+
     except Exception as e:
         logger.error(f"Error downloading CSV: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to download CSV: {str(e)}")
@@ -213,20 +196,18 @@ def get_click_stats():
                 "message": "No log data available",
                 "stats": {"total_clicks": 0, "unique_users": 0, "unique_actions": 0}
             })
-        
+
         df = pd.read_csv(LOG_FILE)
-        
+
         if df.empty:
             return JSONResponse(content={
                 "message": "No log data available",
                 "stats": {"total_clicks": 0, "unique_users": 0, "unique_actions": 0}
             })
-        
-        # Convert timestamp for time-based analysis
+
         df['timestamp'] = pd.to_datetime(df['timestamp'])
         now = datetime.utcnow()
-        
-        # Calculate statistics
+
         stats = {
             "total_clicks": len(df),
             "unique_users": df['user_email'].nunique(),
@@ -246,13 +227,13 @@ def get_click_stats():
             "top_actions": df['action_id'].value_counts().head(10).to_dict(),
             "hourly_distribution": df.groupby(df['timestamp'].dt.hour).size().to_dict()
         }
-        
+
         return JSONResponse(content={
             "message": "Click tracking statistics",
             "generated_at": now.isoformat(),
             "stats": stats
         })
-    
+
     except Exception as e:
         logger.error(f"Error generating stats: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to generate statistics: {str(e)}")
@@ -269,29 +250,26 @@ def clear_logs(confirm: bool = Query(False, description="Confirmation required t
             status_code=400,
             detail="Confirmation required. Add ?confirm=true to clear all logs."
         )
-    
+
     try:
-        # Backup current logs before clearing
         if LOG_FILE.exists():
             backup_file = DATA_DIR / f"click_logs_backup_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.csv"
             LOG_FILE.rename(backup_file)
             logger.info(f"Backed up logs to {backup_file}")
-        
-        # Reinitialize empty CSV
+
         initialize_csv()
-        
-        # Clear text logs
+
         if TEXT_LOG_FILE.exists():
             TEXT_LOG_FILE.write_text("")
-        
+
         logger.info("All click logs cleared")
-        
+
         return JSONResponse(content={
             "message": "All logs cleared successfully",
             "backup_created": str(backup_file) if 'backup_file' in locals() else None,
             "cleared_at": datetime.utcnow().isoformat()
         })
-    
+
     except Exception as e:
         logger.error(f"Error clearing logs: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to clear logs: {str(e)}")
@@ -309,8 +287,7 @@ def get_tracker_health():
             "csv_file_writable": os.access(LOG_FILE.parent, os.W_OK),
             "csv_file_size": LOG_FILE.stat().st_size if LOG_FILE.exists() else 0,
         }
-        
-        # Test CSV read
+
         if LOG_FILE.exists():
             try:
                 df = pd.read_csv(LOG_FILE)
@@ -323,9 +300,9 @@ def get_tracker_health():
         else:
             health_status["csv_readable"] = False
             health_status["record_count"] = 0
-        
+
         return JSONResponse(content=health_status)
-    
+
     except Exception as e:
         return JSONResponse(content={
             "status": "unhealthy",

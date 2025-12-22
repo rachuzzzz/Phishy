@@ -11,6 +11,7 @@ import asyncio
 from pathlib import Path
 import re
 import base64
+import pandas as pd
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -147,105 +148,109 @@ PHISHING_SCENARIOS = {
     }
 }
 
-def create_phishing_prompt(user_email: str, scenario_type: str = "account_security", custom_topic: Optional[str] = None) -> str:
-    """Create a structured prompt for generating phishing emails"""
+def create_phishing_prompt(
+    user_email: str, 
+    scenario_type: str = "account_security", 
+    custom_topic: Optional[str] = None,
+    sender_name: Optional[str] = None,
+    sender_title: Optional[str] = None,
+    sender_department: Optional[str] = None
+) -> str:
+    """Create dynamic prompts based on user input for personalized phishing emails"""
     
     user_name = user_email.split('@')[0].title()
     domain = user_email.split('@')[1] if '@' in user_email else "company.com"
+    company_name = domain.split('.')[0].title()
     
-    # Use custom topic if provided, otherwise use predefined scenario
+    # Set default sender information if not provided
+    if not sender_name:
+        sender_name = "Sarah Mitchell"
+    if not sender_title:
+        sender_title = "Security Administrator"
+    if not sender_department:
+        sender_department = f"{company_name} IT Security Department"
+    
+    # Create dynamic prompt based on user inputs
     if custom_topic:
-        prompt = f"""Generate a realistic, professional phishing email for cybersecurity training purposes.
+        prompt = f"""Generate a professional business email about "{custom_topic}" to {user_name}.
 
-IMPORTANT: This is for employee security awareness training - NOT for malicious use.
+INSTRUCTIONS:
+- Write a realistic business email from {sender_name} ({sender_title}) to {user_name}
+- The email topic is: {custom_topic}
+- Make it urgent and professional
+- Include [CLICK_HERE] placeholder for action link
+- Use formal business tone
+- Write 3-4 paragraphs with proper structure
 
-CUSTOM TOPIC: {custom_topic}
+EMAIL TEMPLATE:
 
-TARGET DETAILS:
-- Target Email: {user_email}
-- User Name: {user_name}
-- Domain: {domain}
-
-ENHANCED REQUIREMENTS:
-1. PROFESSIONAL CORPORATE TONE - Use formal business language appropriate for {domain}
-2. STRUCTURED PARAGRAPHS - Write in clear, well-separated paragraphs (3-4 paragraphs)
-3. DETAILED CONTEXT - Provide specific background information and context
-4. COMPELLING NARRATIVE - Create a believable story with specific details
-5. PROFESSIONAL FORMATTING - Use proper email structure with clear sections
-6. PSYCHOLOGICAL TECHNIQUES - Use authority, urgency, social proof, and specificity
-7. REALISTIC DETAILS - Include specific names, dates, policies, or procedures
-8. CLEAR CALL-TO-ACTION - Include [CLICK_HERE] placeholder for the action link
-9. LONGER CONTENT - Write 200-300 words for more detailed, professional emails
-10. HTML-READY - Structure for professional email formatting
-
-ENHANCED WRITING STYLE:
-- Use industry-specific terminology and jargon
-- Include specific policy numbers, dates, or reference codes
-- Mention real-sounding departments, systems, or contacts
-- Create urgency with specific deadlines and consequences
-- Add credibility with technical details and processes
-
-FORMAT YOUR RESPONSE EXACTLY LIKE THIS:
-Subject: [Write a compelling, professional subject line related to {custom_topic}]
+Subject: [Create urgent subject about {custom_topic}]
 
 Dear {user_name},
 
-[PARAGRAPH 1: Professional greeting and context introduction with specific background]
+I hope this email finds you well. I am {sender_name}, {sender_title} at {sender_department}.
 
-[PARAGRAPH 2: Detailed explanation of the situation with specific information and urgency]
+[Write 2-3 sentences about {custom_topic} and why it needs immediate attention]
 
-[PARAGRAPH 3: Clear consequences and action required with specific timeline]
+[Create urgency - explain what happens if they don't act quickly]
 
-[PARAGRAPH 4: Call-to-action with [CLICK_HERE] and additional instructions or reassurance]
+To resolve this matter, please click the link below:
+
+[CLICK_HERE]
+
+[Add final urgency statement about time limit]
+
+Thank you for your prompt attention to this matter.
 
 Best regards,
-[Professional signature with title, department, and contact information]
 
-GENERATE THE ENHANCED PHISHING EMAIL NOW:"""
+{sender_name}
+{sender_title}
+{sender_department}
+{sender_name.lower().replace(' ', '.')}@{domain} | Phone: (555) 123-4567
+
+GENERATE THE EMAIL NOW:"""
         return prompt
     
-    # Use predefined scenario
+    # Use predefined scenario with custom sender
     scenario = PHISHING_SCENARIOS.get(scenario_type, PHISHING_SCENARIOS["account_security"])
     
-    prompt = f"""Generate a realistic phishing email for cybersecurity training purposes.
+    prompt = f"""Generate a professional business email about {scenario_type.replace('_', ' ')} to {user_name}.
 
-IMPORTANT: This is for employee security awareness training - NOT for malicious use.
+INSTRUCTIONS:
+- Write a realistic business email from {sender_name} ({sender_title}) to {user_name}
+- The context is: {scenario['context']}
+- Make it urgent: {scenario['urgency']}
+- Include [CLICK_HERE] placeholder for action link
+- Use formal business tone
+- Write 3-4 paragraphs with proper structure
 
-SCENARIO DETAILS:
-- Type: {scenario_type.replace('_', ' ').title()}
-- Context: {scenario['context']}
-- Target: {user_email}
-- User Name: {user_name}
-- Domain: {domain}
-- Urgency Factor: {scenario['urgency']}
-- Threat Element: {scenario['threat']}
+EMAIL TEMPLATE:
 
-REQUIREMENTS:
-1. Professional business tone appropriate for {domain}
-2. Create urgency without being obviously suspicious
-3. Include a clear call-to-action with [CLICK_HERE] as the placeholder for the verification link
-4. Use psychological manipulation techniques (authority, urgency, fear)
-5. Make it believable but educational
-6. Keep the email body under 150 words
-7. Include a realistic subject line
-8. Use proper email formatting
-
-PSYCHOLOGICAL TECHNIQUES TO INCLUDE:
-- Authority: Reference legitimate-sounding departments or systems
-- Urgency: Create time pressure
-- Social proof: Mention that others have already taken action
-- Fear: Mention consequences of inaction
-
-FORMAT YOUR RESPONSE EXACTLY LIKE THIS:
-Subject: [Write a compelling subject line here]
+Subject: [Create urgent subject about {scenario_type.replace('_', ' ')}]
 
 Dear {user_name},
 
-[Write the email body here. Include [CLICK_HERE] where the verification link should go]
+I hope this email finds you well. I am {sender_name}, {sender_title} at {sender_department}.
 
-[Professional signature]
+{scenario['context']} {scenario['urgency']}
 
-GENERATE THE PHISHING EMAIL NOW:"""
+To avoid {scenario['threat']}, please take immediate action by clicking the link below:
+
+[CLICK_HERE]
+
+This must be completed within 24 hours to prevent any service disruption.
+
+Thank you for your prompt attention to this matter.
+
+Best regards,
+
+{sender_name}
+{sender_title}
+{sender_department}
+{sender_name.lower().replace(' ', '.')}@{domain} | Phone: (555) 987-6543
+
+GENERATE THE EMAIL NOW:"""
 
     return prompt
 
@@ -472,19 +477,20 @@ def generate_tracking_url(user_email: str, action_id: str, campaign_id: str = No
     return f"{base_url}/email-track/pixel/{tracking_id}?" + "&".join(params)
 
 def convert_to_html_email(email_content: str) -> str:
-    """Convert plain text email to professional HTML format"""
+    """Convert plain text email to professional HTML format with better business styling"""
     lines = email_content.split('\n')
     html_lines = []
     
     in_body = False
+    in_signature = False
     
     for line in lines:
         line = line.strip()
         
-        # Skip empty lines in processing but add them as breaks
+        # Handle empty lines - they indicate paragraph breaks
         if not line:
-            if in_body:
-                html_lines.append('<br>')
+            if in_body and not in_signature:
+                html_lines.append('<br><br>')  # Double break for paragraph spacing
             continue
             
         # Handle subject line
@@ -495,40 +501,75 @@ def convert_to_html_email(email_content: str) -> str:
         # Handle greeting
         if line.startswith('Dear '):
             in_body = True
-            html_lines.append(f'<p style="margin-bottom: 16px;"><strong>{line}</strong></p>')
+            html_lines.append(f'<p style="margin-bottom: 20px; font-weight: 600; color: #2c3e50;">{line}</p>')
             continue
             
-        # Handle signature/closing
-        if any(closing in line.lower() for closing in ['best regards', 'sincerely', 'thank you', 'yours truly']):
-            html_lines.append('<br>')
-            html_lines.append(f'<p style="margin-top: 20px; margin-bottom: 8px;"><strong>{line}</strong></p>')
+        # Handle signature section
+        if any(closing in line.lower() for closing in ['best regards', 'sincerely', 'thank you']):
+            in_signature = True
+            html_lines.append('<div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e1e5e9;">')
+            html_lines.append(f'<p style="margin-bottom: 15px; font-weight: 600; color: #34495e;">{line}</p>')
             continue
             
-        # Handle regular content paragraphs
+        # Handle content in body
         if in_body:
-            # Check if it's a name/title line (usually short, no punctuation)
-            if len(line) < 50 and not line.endswith('.') and not line.startswith('http'):
-                html_lines.append(f'<p style="margin-bottom: 4px;"><em>{line}</em></p>')
+            if in_signature:
+                # Signature lines (name, title, company, contact)
+                if len(line) < 80 and not line.endswith('.'):
+                    if '@' in line or 'phone' in line.lower() or line.startswith('+'):
+                        # Contact information
+                        html_lines.append(f'<p style="margin: 2px 0; color: #7f8c8d; font-size: 13px;">{line}</p>')
+                    else:
+                        # Name and title
+                        html_lines.append(f'<p style="margin: 2px 0; color: #2c3e50; font-weight: 500;">{line}</p>')
+                else:
+                    html_lines.append(f'<p style="margin: 8px 0; color: #34495e;">{line}</p>')
             else:
-                html_lines.append(f'<p style="margin-bottom: 12px; line-height: 1.5;">{line}</p>')
+                # Main body content
+                if '[CLICK_HERE]' in line:
+                    # Call-to-action line
+                    html_lines.append(f'<div style="margin: 25px 0; text-align: center; padding: 15px; background-color: #f8f9fa; border-radius: 5px;">')
+                    html_lines.append(f'<p style="margin: 0; font-weight: 600; color: #2c3e50;">{line}</p>')
+                    html_lines.append('</div>')
+                else:
+                    # Break long paragraphs into sentences for better readability
+                    if len(line) > 150:  # Long paragraph
+                        sentences = line.replace('. ', '.\n').split('\n')
+                        for sentence in sentences:
+                            if sentence.strip():
+                                html_lines.append(f'<p style="margin-bottom: 12px; line-height: 1.6; color: #34495e;">{sentence.strip()}</p>')
+                    else:
+                        # Regular paragraph
+                        html_lines.append(f'<p style="margin-bottom: 16px; line-height: 1.6; color: #34495e;">{line}</p>')
     
-    # Wrap in professional HTML structure
-    html_email = f"""
-    <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body style="font-family: Arial, sans-serif; font-size: 14px; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #007bff;">
-            {''.join(html_lines)}
-        </div>
-        <div style="margin-top: 20px; padding: 15px; background-color: #f1f3f4; border-radius: 4px; font-size: 12px; color: #666;">
-            <p style="margin: 0;"><strong>Security Notice:</strong> This email was sent as part of a cybersecurity awareness training exercise. If you received this email unexpectedly, please report it to your IT security team.</p>
-        </div>
-    </body>
-    </html>
-    """
+    # Close signature div if it was opened
+    if in_signature:
+        html_lines.append('</div>')
+    
+    # Professional HTML structure with better styling
+    html_email = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Important Notice</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f7fa;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f7fa; padding: 40px 0;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); overflow: hidden;">
+                    <tr>
+                        <td style="padding: 40px 30px; font-size: 16px; line-height: 1.6;">
+                            {''.join(html_lines)}
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>"""
     
     return html_email
 
@@ -552,6 +593,9 @@ class EmailGenRequest(BaseModel):
     user_email: str = Field(..., description="Target user email address")
     scenario_type: Optional[str] = Field("account_security", description="Type of phishing scenario")
     custom_topic: Optional[str] = Field(None, description="Custom topic for flexible email generation - overrides scenario_type")
+    sender_name: Optional[str] = Field(None, description="Name of the email sender")
+    sender_title: Optional[str] = Field(None, description="Title/position of the email sender")
+    sender_department: Optional[str] = Field(None, description="Department of the email sender")
     use_llm: Optional[bool] = Field(True, description="Whether to use LLM for generation")
     include_tracking_pixel: Optional[bool] = Field(True, description="Whether to include tracking pixel for email opens")
     html_format: Optional[bool] = Field(True, description="Whether to generate HTML formatted email")
@@ -589,41 +633,143 @@ class ChatResponse(BaseModel):
 @router.post("/chat", response_model=ChatResponse)
 async def general_chat(request: ChatRequest):
     """
-    General chat endpoint for non-phishing conversations
+    General chat endpoint with smart data integration
     
-    Allows users to have normal conversations with Phi-3 Mini as Phishy.
+    Allows users to have conversations with Phi-3 Mini as Phishy with access to real data.
     """
     start_time = datetime.utcnow()
     
     try:
-        # Create a comprehensive educational prompt
-        prompt = f"""You are an expert cybersecurity assistant with deep knowledge of phishing, social engineering, and security awareness training. Your role is to provide comprehensive, educational responses that help users understand cybersecurity concepts thoroughly.
+        # Check if this is a data-related query that needs real information
+        query_lower = request.message.lower()
+        needs_real_data = any(keyword in query_lower for keyword in [
+            "who clicked", "recent clicks", "users who", "fell for", "simulation", 
+            "recent activity", "click data", "user data", "which users", "cllicked",
+            "most recent users", "5 most recent", "recent 5", "security status",
+            "our simulation", "simulation trap", "recent user clicks", "recent users",
+            "user before", "before that", "next user", "previous user", "other users",
+            "who else", "what about", "second user", "third user", "list users",
+            "show me", "tell me about", "more users", "other clicks", "which user",
+            "most recent user", "recently fell", "user most recently", "most recently",
+            "recent user", "latest user", "last user", "newest victim", "latest victim"
+        ]) or ("user" in query_lower and ("recent" in query_lower or "latest" in query_lower or "last" in query_lower))
+        
+        logger.info(f"Processing chat request: '{request.message}' - Data query detected: {needs_real_data}")
+        
+        if needs_real_data:
+            logger.info(f"🎯 SMART DATA QUERY DETECTED: {request.message}")
+            # Import and use smart query handler for data queries
+            try:
+                from .smart_query_handler import SmartQueryAnalyzer
+                analyzer = SmartQueryAnalyzer()
+                
+                # Analyze the query intent
+                intent = analyzer.analyze_query_intent(request.message)
+                logger.info(f"Query intent: {intent}")
+                
+                # Always fetch data for detected queries (not just specific intent types)
+                recent_clicks = analyzer.data_fetcher.get_recent_clicks(hours=24*30, limit=20)  # Last 30 days
+                user_activity = analyzer.data_fetcher.get_user_activity_summary(days=30)
+                data = {
+                    "recent_clicks": recent_clicks,
+                    "user_activity": user_activity
+                }
+                logger.info(f"Fetched {len(recent_clicks)} recent clicks, {user_activity['total_users']} total users")
+                
+                # Create schema-aware data summary for LLM
+                data_summary = ""
+                if not data["recent_clicks"].empty:
+                    recent_df = data["recent_clicks"].head(5)  # Limit to 5 for simplicity
+                    
+                    # Add schema information first
+                    data_summary = """DATA SCHEMA:
+Each record represents one user clicking on a phishing simulation email.
+Fields: timestamp, user_email, action_id, ip_address, user_agent, referer
+
+RECENT SIMULATION VICTIMS (most recent first):
+"""
+                    
+                    for idx, row in recent_df.iterrows():
+                        time_ago = datetime.utcnow() - pd.to_datetime(row['timestamp'])
+                        
+                        if time_ago.total_seconds() < 86400:  # Less than 1 day
+                            time_desc = "today"
+                        else:
+                            days = int(time_ago.total_seconds() / 86400)
+                            time_desc = f"{days} days ago"
+                        
+                        position = idx + 1
+                        # Include more schema context
+                        data_summary += f"{position}. User: {row['user_email']} | When: {time_desc} | Action: {row['action_id']}\n"
+                    
+                    # Schema-aware summary
+                    most_recent = recent_df.iloc[0]
+                    total_victims = len(data["user_activity"]["users"])
+                    data_summary += f"\nSUMMARY:\n"
+                    data_summary += f"- Most recent victim: {most_recent['user_email']}\n"
+                    data_summary += f"- Total victims in database: {total_victims}\n"
+                    data_summary += f"- Each 'click' = one user falling for a phishing email simulation\n"
+                else:
+                    data_summary = "No recent simulation victims found in the click_logs database.\n"
+                
+                # Create schema-aware prompt with real data
+                prompt = f"""You are Phishy, a cybersecurity assistant analyzing phishing simulation data.
+
+Question: {request.message}
+
+{data_summary}
+
+CONTEXT:
+- This data comes from click_logs.csv which tracks users who fell for phishing simulations
+- Each row = one user clicking on a simulated phishing email  
+- timestamp = when they clicked
+- user_email = the victim's email address
+- action_id = unique identifier for the phishing campaign they fell for
+
+Instructions:
+- Answer using only the real data provided above
+- When asked "who clicked recently" refer to the most recent victim
+- When asked "user before that" refer to the 2nd in the list
+- Be factual and concise
+
+Answer:"""
+
+            except Exception as e:
+                logger.warning(f"Smart query failed: {e}, falling back to standard chat")
+                prompt = f"""You are an expert cybersecurity assistant. The user asked: {request.message}
+
+Unfortunately, I cannot access the real-time click data right now, but I can provide general cybersecurity guidance. How can I help you with cybersecurity concepts or best practices?"""
+        
+        else:
+            # Standard educational prompt for non-data queries
+            prompt = f"""You are Phishy, an expert cybersecurity assistant. Your role is to provide helpful, educational responses about cybersecurity.
 
 When answering questions:
-- Provide detailed, educational explanations
-- Include specific examples and context when relevant
-- Focus on helping users learn and understand concepts deeply
-- Use clear, professional language that teaches rather than just informs
-- For greetings, respond naturally and ask how you can help with cybersecurity questions
-- For technical questions, provide thorough explanations with practical insights
-
-Your expertise covers:
-- Phishing techniques and detection methods
-- Social engineering tactics and prevention
-- Cybersecurity best practices and implementation
-- Threat analysis and risk assessment
-- Security awareness training and education
+- Provide clear, practical explanations
+- Include specific examples when relevant
+- Focus on helping users understand concepts
+- Use conversational, professional language
+- For greetings, respond naturally and ask how you can help
 
 User question: {request.message}
 
-Please provide a comprehensive, educational response:"""
+Please provide a helpful response:"""
         
-        # Generate response using Phi-3 Mini via Ollama
-        llm_response = await ollama_client.generate_completion(
-            prompt, 
-            max_tokens=request.max_tokens,
-            temperature=request.temperature
-        )
+        # Generate response using Phi-3 Mini via Ollama with optimized settings
+        if needs_real_data:
+            # Use more conservative settings for data queries
+            llm_response = await ollama_client.generate_completion(
+                prompt, 
+                max_tokens=150,  # Shorter for more focused responses
+                temperature=0.1  # Very low temperature for factual responses
+            )
+        else:
+            # Use normal settings for general chat
+            llm_response = await ollama_client.generate_completion(
+                prompt, 
+                max_tokens=request.max_tokens,
+                temperature=request.temperature
+            )
         
         generation_time = int((datetime.utcnow() - start_time).total_seconds() * 1000)
         
@@ -682,8 +828,15 @@ async def generate_email(request: EmailGenRequest):
     
     if request.use_llm:
         try:
-            # Generate using Phi-3 Mini via Ollama with custom topic support
-            prompt = create_phishing_prompt(user_email, request.scenario_type, request.custom_topic)
+            # Generate using Phi-3 Mini via Ollama with custom topic and sender support
+            prompt = create_phishing_prompt(
+                user_email, 
+                request.scenario_type, 
+                request.custom_topic,
+                request.sender_name,
+                request.sender_title,
+                request.sender_department
+            )
             llm_response = await ollama_client.generate_completion(
                 prompt, 
                 max_tokens=request.max_tokens,
