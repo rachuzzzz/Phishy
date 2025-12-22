@@ -21,27 +21,43 @@ FRONTEND_PORT = int(os.getenv("FRONTEND_PORT", "3001"))
 HOST = os.getenv("HOST", "0.0.0.0")
 DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 
-ALLOWED_ORIGINS = [
+# CORS Configuration - Environment-based security
+# For production: Set ALLOWED_ORIGINS env var with comma-separated origins
+# For development: Uses localhost and ngrok patterns
+CUSTOM_ORIGINS = os.getenv("ALLOWED_ORIGINS", "").split(",") if os.getenv("ALLOWED_ORIGINS") else []
+
+# Development origins (only used if ALLOWED_ORIGINS not set)
+DEV_ORIGINS = [
     f"http://localhost:{FRONTEND_PORT}",
     f"http://127.0.0.1:{FRONTEND_PORT}",
-    "http://localhost:3001",  # Backup
-    "http://localhost:3000",  # Legacy support
-    "https://mail.google.com",  # Gmail for extension
-    "https://*.ngrok.io",  # Ngrok tunnels
-    "https://*.ngrok-free.app",  # Free ngrok domains
-    "chrome-extension://*",  # Chrome extensions
+    "http://localhost:3001",
+    "http://localhost:3000",
 ]
 
+# Choose appropriate CORS configuration
+if CUSTOM_ORIGINS and CUSTOM_ORIGINS[0]:  # Production: use explicit origins
+    ALLOWED_ORIGINS = CUSTOM_ORIGINS
+    USE_WILDCARD = False
+elif DEBUG:  # Development: use wildcard for ngrok/Chrome extension
+    ALLOWED_ORIGINS = DEV_ORIGINS
+    USE_WILDCARD = True
+else:  # Production without explicit origins: secure default
+    ALLOWED_ORIGINS = DEV_ORIGINS
+    USE_WILDCARD = False
+
 print(f"Phishy Platform Configuration:")
-print(f"   Backend Port: {BACKEND_PORT} (ngrok-friendly)")
+print(f"   Backend Port: {BACKEND_PORT}")
 print(f"   Frontend Port: {FRONTEND_PORT}")
-print(f"   CORS Origins: {ALLOWED_ORIGINS}")
+print(f"   Debug Mode: {DEBUG}")
+print(f"   CORS Mode: {'Wildcard (Development)' if USE_WILDCARD else 'Restricted (Production)'}")
+if not USE_WILDCARD:
+    print(f"   Allowed Origins: {ALLOWED_ORIGINS}")
 
 log_dir = Path("logs")
 log_dir.mkdir(exist_ok=True)
 
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.DEBUG if DEBUG else logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
         logging.FileHandler(log_dir / "phishy_app.log"),
@@ -51,24 +67,38 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 app = FastAPI(
-    title="Phishy - Advanced Cybersecurity Training Platform",
+    title="Phishy - Multi-Signal Email Security Analysis Platform",
     version="2.1.0",
-    description="An LLM-integrated phishing simulation, analytics, and training platform for security teams.",
+    description="Advanced phishing simulation and training platform using multi-signal analysis and explainable AI.",
     contact={
         "name": "Phishy Dev Team",
         "email": "admin@phishy-security.com"
     },
-    docs_url="/docs",
-    redoc_url="/redoc"
+    docs_url="/docs" if DEBUG else None,  # Disable API docs in production
+    redoc_url="/redoc" if DEBUG else None,
 )
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins for development/ngrok
-    allow_credentials=False,  # Disable credentials for wildcard origins
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# CORS Middleware - Secure configuration
+if USE_WILDCARD:
+    # Development mode: Allow all origins for ngrok/Chrome extension
+    logger.warning("⚠️  WILDCARD CORS ENABLED - Development mode only!")
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=False,
+        allow_methods=["GET", "POST"],
+        allow_headers=["*"],
+    )
+else:
+    # Production mode: Restricted origins
+    logger.info("✓ Restricted CORS enabled - Production mode")
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=ALLOWED_ORIGINS,
+        allow_credentials=False,
+        allow_methods=["GET", "POST"],
+        allow_headers=["Content-Type", "Authorization"],
+    )
 
 routes_loaded = []
 routes_failed = []

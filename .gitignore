@@ -7,7 +7,27 @@ __pycache__/
 
 # Ignore environment variables
 .env
+
+# Logs (contain sensitive data)
 backend/logs/*.log
+logs/*.log
+*.log
+
+# Data files (contain PII - emails, IPs, user agents)
+backend/data/click_logs.csv
+backend/data/*.csv
+data/*.csv
+!backend/data/intent_dataset.csv
 
 # Claude Code settings
 .claude/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE settings
+.vscode/
+.idea/
+*.swp
+*.swo
