@@ -366,7 +366,7 @@ This platform was developed as part of a Master's in Cybersecurity application, 
 
 For security-related questions:
 - **GitHub Issues**: [Report here](https://github.com/rachuzzzz/Phishy/issues) (non-sensitive only)
-- **Security Email**: [UPDATE THIS]
+- **Security Email**: cyberphishytesting@gmail.com
 - **Project**: [Phishy on GitHub](https://github.com/rachuzzzz/Phishy)
 
 ---
