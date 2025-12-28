@@ -319,16 +319,11 @@ The extension displays:
 
 ## 📸 Platform Screenshots
 
-Want to see the platform in action? Check out our **[complete visual walkthrough with 19 detailed screenshots](WORKING.md)** covering:
-
-- Chat Interface & AI Analytics
-- Email Generator & SMTP Configuration
-- Email Analyzer for Phishing Detection
-- Analytics Dashboard & Reports
-- Email Tracking & Activity Logs
-- Risk Assessment & User Profiles
-- Chrome Extension Gmail Integration
-- Detailed Multi-Signal Security Analysis
+> **📖 [VIEW COMPLETE VISUAL WALKTHROUGH →](WORKING.md)**
+>
+> See the platform in action with **19 detailed screenshots** covering all features:
+> Chat Interface • Email Generator • Email Analyzer • Analytics Dashboard
+> Email Tracking • Activity Logs • Risk Assessment • Chrome Extension • Security Analysis
 
 ---
 
