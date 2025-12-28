@@ -1768,7 +1768,7 @@
             border-top: 2px solid #d1d5db;
         }
 
-        /* Forecasting Specific Styles */
+        /* Status Display Styles (used by Health, Analytics, etc.) */
         .status-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -2431,10 +2431,6 @@
                         <span class="nav-icon">📋</span>
                         Activity Logs
                     </div>
-                    <div class="nav-item" onclick="switchMode('forecasting')" data-mode="forecasting">
-                        <span class="nav-icon">📈</span>
-                        Predictive Analysis
-                    </div>
                     <div class="nav-item" onclick="switchMode('risk-assessment')" data-mode="risk-assessment">
                         <span class="nav-icon">⚠️</span>
                         Risk Assessment
@@ -2471,7 +2467,7 @@
                 <div class="header-actions">
                     <button class="header-btn" onclick="clearCurrentView()">Clear</button>
                     <button class="header-btn" onclick="refreshData()">Refresh</button>
-                    <button class="header-btn" onclick="window.open('http://localhost:5000/docs', '_blank')">API Docs</button>
+                    <button class="header-btn" onclick="window.open('http://localhost:8080/docs', '_blank')">API Docs</button>
                 </div>
             </div>
 
@@ -3179,117 +3175,6 @@ Hi! I'm your advanced AI cybersecurity assistant, ready to enhance your organiza
                     </div>
                 </div>
 
-                <!-- Forecasting Screen -->
-                <div class="content-screen" id="forecastingScreen">
-                    <div class="analytics-container">
-                        <!-- Stats Grid -->
-                        <div class="stats-grid">
-                            <div class="stat-card">
-                                <div class="stat-value" id="forecastTrend">-</div>
-                                <div class="stat-label">Trend Direction</div>
-                                <div class="stat-change" id="trendChange">Loading...</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-value" id="predictedClicks">-</div>
-                                <div class="stat-label">Predicted Clicks</div>
-                                <div class="stat-change" id="clicksChange">Loading...</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-value" id="riskLevel">-</div>
-                                <div class="stat-label">Risk Level</div>
-                                <div class="stat-change" id="riskChange">Loading...</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-value" id="modelStatus">-</div>
-                                <div class="stat-label">Model Status</div>
-                                <div class="stat-change" id="statusChange">Loading...</div>
-                            </div>
-                        </div>
-
-                        <!-- Controls -->
-                        <div class="chart-container">
-                            <div class="chart-title">📈 Predictive Analytics Controls</div>
-                            <div style="display: flex; gap: 16px; align-items: center; margin-bottom: 20px;">
-                                <div>
-                                    <label style="font-weight: 600; margin-right: 8px;">Forecast Period:</label>
-                                    <select id="forecastDays" style="padding: 8px; border: 1px solid #d1d5db; border-radius: 6px;">
-                                        <option value="7">Next 7 days</option>
-                                        <option value="14">Next 2 weeks</option>
-                                        <option value="30" selected>Next 30 days</option>
-                                        <option value="60">Next 2 months</option>
-                                        <option value="90">Next 3 months</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label style="font-weight: 600; margin-right: 8px;">Confidence:</label>
-                                    <select id="confidenceLevel" style="padding: 8px; border: 1px solid #d1d5db; border-radius: 6px;">
-                                        <option value="0.6">60%</option>
-                                        <option value="0.8" selected>80%</option>
-                                        <option value="0.95">95%</option>
-                                    </select>
-                                </div>
-                                <button onclick="generateForecast()" style="background: #3b82f6; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600;">
-                                    🔮 Generate Forecast
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Forecast Chart -->
-                        <div class="chart-container">
-                            <div class="chart-title">Trend Forecast</div>
-                            <div class="chart-canvas">
-                                <div id="forecastChart">Click "Generate Forecast" to view predictions</div>
-                            </div>
-                        </div>
-
-                        <!-- Trend Analysis -->
-                        <div class="chart-container">
-                            <div class="chart-title">
-                                <span>📊</span>
-                                Trend Analysis & Seasonal Patterns
-                            </div>
-                            <div id="trendAnalysisContent" class="loading">
-                                <div class="loading-spinner"></div>
-                                Generate forecast to see trend analysis...
-                            </div>
-                        </div>
-
-                        <!-- Risk Assessment -->
-                        <div class="chart-container">
-                            <div class="chart-title">
-                                <span>🛡️</span>
-                                Risk Assessment & Peak Days
-                            </div>
-                            <div id="riskAssessmentContent" class="loading">
-                                <div class="loading-spinner"></div>
-                                Generate forecast to see risk assessment...
-                            </div>
-                        </div>
-
-                        <!-- Recommendations -->
-                        <div class="chart-container">
-                            <div class="chart-title">
-                                <span>💡</span>
-                                AI Recommendations & Model Performance
-                            </div>
-                            <div id="recommendationsContent" class="loading">
-                                <div class="loading-spinner"></div>
-                                Generate forecast to see recommendations...
-                            </div>
-                        </div>
-
-                        <div id="forecastLoading" class="loading hidden">
-                            <div class="loading-spinner"></div>
-                            <div style="text-align: center; margin-top: 16px;">
-                                <div>🧠 Training Prophet forecasting model...</div>
-                                <div style="font-size: 0.9em; opacity: 0.7; margin-top: 10px;">
-                                    Analyzing historical data and generating predictions
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Health Screen -->
                 <div class="content-screen" id="healthScreen">
                     <div class="analytics-container">
@@ -3386,7 +3271,7 @@ Hi! I'm your advanced AI cybersecurity assistant, ready to enhance your organiza
     </div>
 
     <script>
-        const API_BASE = 'http://localhost:5000';
+        const API_BASE = 'http://localhost:8080';
         let currentMode = 'chat';
         let generatedEmailData = null;
         let isLoading = false;
@@ -3430,7 +3315,6 @@ Hi! I'm your advanced AI cybersecurity assistant, ready to enhance your organiza
             'analytics': { icon: '📊', title: 'Overview Dashboard' },
             'email-tracking': { icon: '📧', title: 'Email Tracking' },
             'risk-assessment': { icon: '⚠️', title: 'Risk Assessment' },
-            'forecasting': { icon: '📈', title: 'Predictive Analysis' },
             'health': { icon: '🏥', title: 'System Health' },
             'logs': { icon: '📋', title: 'Activity Logs' },
             'email-flagging': { icon: '🚩', title: 'Flagged Emails' }
@@ -3482,9 +3366,6 @@ Hi! I'm your advanced AI cybersecurity assistant, ready to enhance your organiza
             } else if (mode === 'risk-assessment') {
                 document.getElementById('riskAssessmentScreen').classList.add('active');
                 loadRiskAssessment();
-            } else if (mode === 'forecasting') {
-                document.getElementById('forecastingScreen').classList.add('active');
-                loadForecastingScreen();
             } else if (mode === 'health') {
                 document.getElementById('healthScreen').classList.add('active');
                 loadHealthScreen();
@@ -7051,235 +6932,6 @@ Report generated by Phishy Security Platform
                 console.error('Error generating report:', error);
                 alert('Unable to generate risk report: ' + error.message);
             }
-        }
-
-        // Forecasting Functions
-        async function loadForecastingScreen() {
-            try {
-                // Check model status first
-                const statusResponse = await fetch(`${API_BASE}/forecast/model-status`);
-                if (statusResponse.ok) {
-                    const status = await statusResponse.json();
-                    updateForecastStats(status);
-                } else {
-                    showForecastError('Unable to connect to forecasting service');
-                }
-            } catch (error) {
-                console.error('Error loading forecasting screen:', error);
-                showForecastError('Connection error: ' + error.message);
-            }
-        }
-
-        async function generateForecast() {
-            const forecastDays = parseInt(document.getElementById('forecastDays').value);
-            const confidenceLevel = parseFloat(document.getElementById('confidenceLevel').value);
-            
-            // Show loading state
-            document.getElementById('forecastLoading').classList.remove('hidden');
-            
-            try {
-                const response = await fetch(`${API_BASE}/forecast/generate`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        forecast_days: forecastDays,
-                        confidence_interval: confidenceLevel
-                    })
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`Forecast API error: ${response.status}`);
-                }
-                
-                const forecastData = await response.json();
-                
-                // Hide loading and update all sections
-                document.getElementById('forecastLoading').classList.add('hidden');
-                updateForecastDisplay(forecastData);
-                
-            } catch (error) {
-                console.error('Error generating forecast:', error);
-                document.getElementById('forecastLoading').classList.add('hidden');
-                showForecastError(error.message);
-            }
-        }
-
-        function updateForecastStats(status) {
-            // Update stats grid
-            document.getElementById('forecastTrend').textContent = '-';
-            document.getElementById('trendChange').textContent = 'Generate forecast to see trend';
-            
-            document.getElementById('predictedClicks').textContent = '-';
-            document.getElementById('clicksChange').textContent = 'Generate forecast to see predictions';
-            
-            document.getElementById('riskLevel').textContent = '-';
-            document.getElementById('riskChange').textContent = 'Generate forecast to see risk level';
-            
-            if (status.model_trained) {
-                document.getElementById('modelStatus').textContent = 'Ready';
-                document.getElementById('statusChange').textContent = `${status.data_points} data points available`;
-                document.getElementById('statusChange').style.color = '#10b981';
-            } else {
-                document.getElementById('modelStatus').textContent = 'Not Trained';
-                document.getElementById('statusChange').textContent = 'Click generate to train model';
-                document.getElementById('statusChange').style.color = '#f59e0b';
-            }
-        }
-
-        function updateForecastDisplay(forecastData) {
-            const trendAnalysis = forecastData.trend_analysis;
-            const riskAssessment = forecastData.risk_assessment;
-            
-            // Update stats grid
-            document.getElementById('forecastTrend').textContent = trendAnalysis.current_trend.toUpperCase();
-            document.getElementById('trendChange').textContent = `${trendAnalysis.trend_strength.toFixed(1)}% strength`;
-            document.getElementById('trendChange').style.color = trendAnalysis.current_trend === 'increasing' ? '#ef4444' : '#10b981';
-            
-            document.getElementById('predictedClicks').textContent = Math.round(trendAnalysis.predicted_total_clicks);
-            document.getElementById('clicksChange').textContent = `Next ${forecastData.forecast_data.length} days`;
-            
-            document.getElementById('riskLevel').textContent = riskAssessment.overall_risk.toUpperCase();
-            document.getElementById('riskChange').textContent = `${riskAssessment.peak_risk_days.length} peak risk days`;
-            document.getElementById('riskChange').style.color = riskAssessment.overall_risk === 'high' ? '#ef4444' : '#f59e0b';
-            
-            document.getElementById('modelStatus').textContent = 'Trained';
-            document.getElementById('statusChange').textContent = 'Ready for predictions';
-            document.getElementById('statusChange').style.color = '#10b981';
-            
-            // Update chart
-            createSimpleChart(forecastData.forecast_data);
-            
-            // Update trend analysis content
-            const seasonalPatterns = trendAnalysis.seasonal_patterns;
-            document.getElementById('trendAnalysisContent').innerHTML = `
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 16px;">
-                    <div>
-                        <h4 style="color: #374151; margin-bottom: 12px;">📅 Weekly Patterns</h4>
-                        <div style="background: rgba(59, 130, 246, 0.05); padding: 12px; border-radius: 8px;">
-                            <div><strong>Highest Risk:</strong> ${seasonalPatterns.weekly_pattern?.highest_risk_day || 'Monday'}</div>
-                            <div><strong>Lowest Risk:</strong> ${seasonalPatterns.weekly_pattern?.lowest_risk_day || 'Sunday'}</div>
-                        </div>
-                    </div>
-                    <div>
-                        <h4 style="color: #374151; margin-bottom: 12px;">📊 Trend Details</h4>
-                        <div style="background: rgba(59, 130, 246, 0.05); padding: 12px; border-radius: 8px;">
-                            <div><strong>Current Trend:</strong> ${trendAnalysis.current_trend} (${trendAnalysis.trend_strength.toFixed(1)}%)</div>
-                            <div><strong>Confidence:</strong> ${trendAnalysis.confidence_bounds.lower.toFixed(1)} - ${trendAnalysis.confidence_bounds.upper.toFixed(1)}</div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            // Update risk assessment content
-            document.getElementById('riskAssessmentContent').innerHTML = `
-                <div style="margin-top: 16px;">
-                    <div style="display: flex; align-items: center; gap: 16px; padding: 16px; background: ${riskAssessment.overall_risk === 'high' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(245, 158, 11, 0.1)'}; border-radius: 8px; margin-bottom: 16px;">
-                        <div style="font-size: 2rem;">${riskAssessment.overall_risk === 'high' ? '🚨' : '⚠️'}</div>
-                        <div>
-                            <div style="font-size: 1.2rem; font-weight: 700; color: #374151;">${riskAssessment.overall_risk.toUpperCase()} RISK</div>
-                            <div style="color: #6b7280;">Based on ${forecastData.forecast_data.length} day forecast</div>
-                        </div>
-                    </div>
-                    <h4 style="color: #374151; margin-bottom: 12px;">📊 Peak Risk Days</h4>
-                    ${riskAssessment.peak_risk_days.slice(0, 3).map(day => `
-                        <div style="display: flex; justify-content: space-between; padding: 8px 12px; background: rgba(255, 255, 255, 0.8); border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 8px;">
-                            <span style="font-weight: 600;">${new Date(day.ds).toLocaleDateString()}</span>
-                            <span style="color: #6b7280;">${day.yhat.toFixed(1)} predicted clicks</span>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-            
-            // Update recommendations content
-            const performance = forecastData.model_performance;
-            document.getElementById('recommendationsContent').innerHTML = `
-                <div style="margin-top: 16px;">
-                    <h4 style="color: #374151; margin-bottom: 12px;">💡 AI Recommendations</h4>
-                    <div style="margin-bottom: 20px;">
-                        ${forecastData.recommendations.map((rec, index) => `
-                            <div style="display: flex; align-items: flex-start; gap: 12px; padding: 12px; background: rgba(255, 255, 255, 0.8); border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 8px;">
-                                <div style="background: #3b82f6; color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 600; flex-shrink: 0;">${index + 1}</div>
-                                <div style="color: #374151; line-height: 1.5;">${rec}</div>
-                            </div>
-                        `).join('')}
-                    </div>
-                    <h4 style="color: #374151; margin-bottom: 12px;">⚙️ Model Performance</h4>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px;">
-                        <div style="text-align: center; padding: 12px; background: rgba(255, 255, 255, 0.8); border: 1px solid #e5e7eb; border-radius: 8px;">
-                            <div style="font-size: 0.8rem; color: #6b7280; margin-bottom: 4px;">MAE</div>
-                            <div style="font-weight: 700; color: #374151;">${performance.mae?.toFixed(3) || 'N/A'}</div>
-                        </div>
-                        <div style="text-align: center; padding: 12px; background: rgba(255, 255, 255, 0.8); border: 1px solid #e5e7eb; border-radius: 8px;">
-                            <div style="font-size: 0.8rem; color: #6b7280; margin-bottom: 4px;">RMSE</div>
-                            <div style="font-weight: 700; color: #374151;">${performance.rmse?.toFixed(3) || 'N/A'}</div>
-                        </div>
-                        <div style="text-align: center; padding: 12px; background: rgba(255, 255, 255, 0.8); border: 1px solid #e5e7eb; border-radius: 8px;">
-                            <div style="font-size: 0.8rem; color: #6b7280; margin-bottom: 4px;">R²</div>
-                            <div style="font-weight: 700; color: #374151;">${performance.r_squared?.toFixed(3) || 'N/A'}</div>
-                        </div>
-                        <div style="text-align: center; padding: 12px; background: rgba(255, 255, 255, 0.8); border: 1px solid #e5e7eb; border-radius: 8px;">
-                            <div style="font-size: 0.8rem; color: #6b7280; margin-bottom: 4px;">MAPE</div>
-                            <div style="font-weight: 700; color: #374151;">${performance.mape?.toFixed(1) || 'N/A'}%</div>
-                        </div>
-                    </div>
-                    <div style="text-align: center; color: #6b7280; font-style: italic; margin-top: 12px;">
-                        Model trained on ${performance.training_data_points || 'unknown'} data points
-                    </div>
-                </div>
-            `;
-        }
-
-        function createSimpleChart(forecastData) {
-            const chartContainer = document.getElementById('forecastChart');
-            
-            if (!forecastData || forecastData.length === 0) {
-                chartContainer.innerHTML = '<div style="text-align: center; padding: 40px; color: #6b7280;">No forecast data available</div>';
-                return;
-            }
-            
-            // Simple chart visualization
-            const maxValue = Math.max(...forecastData.map(d => d.upper_bound || d.predicted_clicks));
-            const chartHTML = `
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <div style="font-size: 1.1rem; font-weight: 600; color: #374151;">📈 ${forecastData.length}-Day Click Forecast</div>
-                </div>
-                <div style="display: flex; align-items: end; gap: 2px; height: 150px; margin: 20px 0; padding: 0 10px;">
-                    ${forecastData.map((point, index) => {
-                        const height = (point.predicted_clicks / maxValue) * 100;
-                        const date = new Date(point.date);
-                        return `
-                            <div style="flex: 1; display: flex; flex-direction: column; align-items: center;" title="${date.toLocaleDateString()}: ${point.predicted_clicks.toFixed(1)} clicks">
-                                <div style="background: #3b82f6; width: 100%; height: ${Math.max(height, 5)}%; border-radius: 2px 2px 0 0; margin-bottom: 4px;"></div>
-                                <div style="font-size: 0.7rem; color: #6b7280; writing-mode: vertical-rl; text-orientation: mixed;">${date.getDate()}</div>
-                            </div>
-                        `;
-                    }).join('')}
-                </div>
-                <div style="display: flex; justify-content: center; gap: 20px; margin-top: 16px; font-size: 0.9rem; color: #6b7280;">
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <div style="width: 16px; height: 16px; background: #3b82f6; border-radius: 2px;"></div>
-                        <span>Predicted Clicks</span>
-                    </div>
-                </div>
-            `;
-            
-            chartContainer.innerHTML = chartHTML;
-        }
-
-        function showForecastError(message) {
-            // Update all content areas to show error
-            document.getElementById('forecastChart').innerHTML = `
-                <div style="text-align: center; padding: 40px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px;">
-                    <div style="font-size: 2rem; margin-bottom: 16px;">⚠️</div>
-                    <h3 style="color: #ef4444; margin-bottom: 12px;">Forecast Generation Failed</h3>
-                    <p style="color: #6b7280; margin-bottom: 20px;">${message}</p>
-                    <button onclick="generateForecast()" style="background: #3b82f6; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600;">Try Again</button>
-                </div>
-            `;
-            
-            ['trendAnalysisContent', 'riskAssessmentContent', 'recommendationsContent'].forEach(id => {
-                document.getElementById(id).innerHTML = `<div style="text-align: center; padding: 24px; color: #ef4444;">Failed to load: ${message}</div>`;
-            });
         }
 
         // Health Functions

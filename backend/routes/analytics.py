@@ -63,7 +63,7 @@ class AdvancedAnalytics:
     
     def load_data_pandas(self) -> pd.DataFrame:
         """Load data using Pandas"""
-        data_dir = os.path.join(os.path.dirname(__file__), "data")
+        data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
         log_file = os.path.join(data_dir, "click_logs.csv")
         
         if not os.path.exists(log_file):
@@ -98,7 +98,7 @@ class AdvancedAnalytics:
     
     def load_data_polars(self) -> pl.DataFrame:
         """Load data using Polars"""
-        data_dir = os.path.join(os.path.dirname(__file__), "data")
+        data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
         log_file = os.path.join(data_dir, "click_logs.csv")
         
         if not os.path.exists(log_file):

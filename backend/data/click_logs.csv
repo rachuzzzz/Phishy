@@ -1,1 +1,11 @@
 timestamp,user_email,action_id,ip_address,user_agent,referer
+2025-08-16T07:34:54.088421,thomasraisen122@gmail.com,phish-ec55fc3f,103.160.233.171,"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",direct
+2025-12-28T14:01:40.065736,test.user@company.com,campaign-001,127.0.0.1,curl/8.12.1,direct
+2025-12-28T14:01:41.812270,test.user@company.com,campaign-001,127.0.0.1,curl/8.12.1,direct
+2025-12-28T14:01:43.287953,another.user@company.com,campaign-002,127.0.0.1,curl/8.12.1,direct
+2025-12-28T14:02:13.213388,risky.user@company.com,phish-001,127.0.0.1,curl/8.12.1,direct
+2025-12-28T14:02:13.500429,risky.user@company.com,phish-002,127.0.0.1,curl/8.12.1,direct
+2025-12-28T14:02:13.768700,risky.user@company.com,phish-003,127.0.0.1,curl/8.12.1,direct
+2025-12-28T14:02:14.052749,risky.user@company.com,phish-004,127.0.0.1,curl/8.12.1,direct
+2025-12-28T14:02:14.351854,risky.user@company.com,phish-005,127.0.0.1,curl/8.12.1,direct
+2025-12-28T14:02:14.705797,risky.user@company.com,phish-006,127.0.0.1,curl/8.12.1,direct

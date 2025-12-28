@@ -317,6 +317,175 @@ The extension displays:
 
 ---
 
+## 📸 Platform Screenshots
+
+### Chat Interface
+
+![Chat Interface](docs/screenshots/chat-interface.png)
+
+The **Phishy AI Chat Interface** provides conversational access to security analytics. Users can ask natural language questions about click trends, security metrics, and campaign performance. The interface shows real-time security status with metrics like total click events, monitored users, recent activity, and current risk levels.
+
+### AI Email Generator
+
+![Email Generator Setup](docs/screenshots/email-generator-setup.png)
+
+The **Email Generator** allows security teams to create realistic phishing simulations. Simply enter the target email, select a scenario (account security, payment requests, etc.), and optionally customize the sender name. The AI generates contextual phishing emails using Phi-3 Mini LLM.
+
+![Email Generator SMTP](docs/screenshots/email-generator-smtp.png)
+
+Configure SMTP settings to send training emails. The platform auto-detects SMTP servers from email domains and supports Gmail, Outlook, Yahoo, and more. Preview campaigns before sending and enable 1x1 tracking pixels to monitor email opens.
+
+### Email Analyzer
+
+![Email Analyzer](docs/screenshots/email-analyzer.png)
+
+The **Email Analyzer** provides real-time phishing analysis using multi-signal detection. Paste suspicious email content for instant analysis with:
+- ML classification with confidence scores
+- URL safety verification
+- Smart pattern detection (social engineering, urgency tactics)
+- Actionable security recommendations
+
+### Overview Dashboard
+
+![Overview Dashboard](docs/screenshots/overview-dashboard.png)
+
+The **Analytics Dashboard** displays comprehensive campaign metrics:
+- Total clicks and unique users engaged
+- Average risk scores with risk level indicators
+- Training success rates
+- Email open rates and engagement metrics
+- Click activity trends over time
+- User-level click summaries with risk ratings
+
+### Analytics Reports
+
+![Analytics Report 1](docs/screenshots/analytics-report-1.png)
+
+**Phishing Campaign Analytics Reports** provide executive summaries with:
+- Total security events and users monitored
+- Click event tracking
+- Flagged email identification
+- Recent activity patterns
+- Average engagement rates
+
+![Analytics Report 2](docs/screenshots/analytics-report-2.png)
+
+**Actionable Recommendations** are categorized by timeline:
+- Immediate actions (0-30 days): Urgent security training for high-risk users
+- Medium-term goals (1-3 months): Personalized training modules, security awareness sessions
+- Long-term strategy (3+ months): Advanced email filtering, security champion programs
+
+![Analytics Report 3](docs/screenshots/analytics-report-3.png)
+
+**High-Risk User Identification** table shows:
+- Employee emails with click counts
+- Risk level classification (HIGH, MEDIUM, LOW)
+- Recommended training actions per user
+
+![Analytics Report 4](docs/screenshots/analytics-report-4.png)
+
+**Key Performance Metrics** display:
+- Total phishing clicks (campaign interactions)
+- Unique users engaged
+- Recent activity (weekly engagement)
+- Click-through percentage rates
+
+### Email Tracking
+
+![Email Tracking](docs/screenshots/email-tracking.png)
+
+The **Email Tracking** dashboard monitors:
+- Total email opens and unique users
+- Open rate percentages
+- Email open activity over time (hourly breakdown)
+- Individual user open timestamps
+
+### Activity Logs
+
+![Activity Logs](docs/screenshots/activity-logs.png)
+
+**Activity Logs** provide detailed audit trails:
+- Filters by user email, action ID, time period
+- Total clicks, unique users, unique IPs
+- Downloadable CSV exports
+- Detailed logs with timestamps, user emails, action IDs, IP addresses, user agents, and referrers
+
+### Risk Assessment
+
+![Risk Assessment 1](docs/screenshots/risk-assessment-1.png)
+
+The **Risk Assessment** module calculates overall security posture:
+- Overall risk score (0-100) with severity classification
+- High-risk user counts
+- Risk trend analysis (INCREASING, STABLE, DECREASING)
+- Training priority recommendations
+
+**Risk Breakdown by Category:**
+- User Behavior Risk: Percentage of high-risk users
+- Engagement Risk: Percentage who clicked simulations
+- Frequency Risk: Average clicks per active user
+- Recent Activity Risk: Surge detection
+
+![Risk Assessment 2](docs/screenshots/risk-assessment-2.png)
+
+**Individual User Risk Profiles** show personalized assessments:
+- User avatars with email addresses
+- Risk classification badges (HIGH, MEDIUM, LOW)
+- Click counts per user
+- Recommended actions (immediate training, group sessions, standard monitoring)
+
+![Risk Assessment 3](docs/screenshots/risk-assessment-3.png)
+
+**Security Risk Assessment Report** with downloadable PDF:
+- Recommended actions with priority levels and timelines
+- Immediate actions flagged as HIGH priority
+- Medium and LOW priority recommendations for long-term security
+
+### Chrome Extension
+
+![Chrome Extension Popup](docs/screenshots/chrome-extension-popup.png)
+
+The **Chrome Extension** integrates directly into Gmail:
+- Configuration popup for email address and backend URL
+- Connection testing
+- Automatic email scanning on open
+- Inline security analysis displayed in Gmail
+
+![Chrome Extension Detection](docs/screenshots/chrome-extension-detection.png)
+
+**Real-time Phishing Detection** in Gmail inbox:
+- Color-coded risk banners (red = HIGH RISK)
+- Smart analysis: URLs found, trusted sources, API indicators
+- Phi AI detection of suspicious patterns
+- Quick recommendations (don't click links, report to security team)
+
+### Detailed Security Analysis
+
+![Detailed Analysis 1](docs/screenshots/detailed-analysis-1.png)
+
+**Detailed Security Analysis Modal** provides multi-signal breakdowns:
+- **ML Phishing Detection**: Confidence percentage, risk level, AI recommendations
+- **Google Safe Browsing**: URL reputation checks with clean/suspicious status
+- **URLScan.io Analysis**: Malicious score, security engine results
+- **Path Intelligence Analysis**: Suspicious pattern detection (random paths, obfuscation)
+
+![Detailed Analysis 2](docs/screenshots/detailed-analysis-2.png)
+
+**URLScan.io Integration** shows:
+- Scanned URLs with malicious scores (0/100)
+- Security engine results (URLVoid, OpenPhish, Malware Domain List, Phishtank)
+- Real-time URL scanning and reputation analysis
+
+![Detailed Analysis 3](docs/screenshots/detailed-analysis-3.png)
+
+**AI Security Summary** provides explainable analysis:
+- Overall assessment (CRITICAL RISK, HIGH, MEDIUM, LOW)
+- Key findings explaining WHY an email is dangerous
+- Detection of sophisticated evasion tactics
+- Warnings about credential theft, malware, and social engineering
+
+---
+
 ## 📚 API Endpoints
 
 ### Core Analysis

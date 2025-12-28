@@ -141,7 +141,7 @@ load_route_module("classifier_endpoint", "/ai/classifier", ["🤖 Intent Classif
 # load_route_module("simple_intelligent_query", "/ai", ["🤖 Intelligent Query Routing"])  # DISABLED - duplicate
 # load_route_module("intelligent_query", "/intelligent", ["🧠 Smart Intelligent Query"])  # DISABLED - duplicate
 load_route_module("smart_query_handler", "/smart", ["🔍 Smart Query Handler"])
-load_route_module("forecast", "/forecast", ["📈 Forecasting"])
+# load_route_module("forecast", "/forecast", ["📈 Forecasting"])  # DISABLED - Predictive analytics removed
 load_route_module("phishing_detector", "/detector", ["🛡️ AI Phishing Detection"])
 load_route_module("comprehensive_analysis", "/comprehensive", ["🛡️ Comprehensive Security Analysis"])
 load_route_module("email_tracking", "/email-track", ["📧 Email Tracking"])

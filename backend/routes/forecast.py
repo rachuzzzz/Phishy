@@ -43,7 +43,7 @@ class ClickForecastingEngine:
         
     def load_data_pandas(self) -> pd.DataFrame:
         """Load data using same approach as analytics module"""
-        data_dir = os.path.join(os.path.dirname(__file__), "data")
+        data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
         log_file = os.path.join(data_dir, "click_logs.csv")
         
         if not os.path.exists(log_file):
