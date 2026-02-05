@@ -358,7 +358,7 @@ Columns displayed:
 
 | Timestamp | User Email | Action ID | IP Address | User Agent | Referer |
 |-----------|------------|-----------|------------|------------|---------|
-| 8/16/2025, 10:34:54 AM | thomasraisen122@gmail.com | phish-ec55fc3f | 103.160.233.171 | Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWeb... | direct |
+| 8/16/2025, 10:34:54 AM | xxxxxxxxx@gmail.com | phish-ec55fc3f | 103.xxx.xxx.xxx | Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWeb... | direct |
 | 12/28/2025, 5:01:40 PM | test.user@company.com | campaign-001 | 127.0.0.1 | curl/8.12.1 | direct |
 | 12/28/2025, 5:01:41 PM | test.user@company.com | campaign-001 | 127.0.0.1 | curl/8.12.1 | direct |
 | 12/28/2025, 5:01:43 PM | another.user@company.com | campaign-002 | 127.0.0.1 | curl/8.12.1 | direct |
